@@ -27,7 +27,7 @@ func SendJson(c *gin.Context, err error, data interface{}) {
 		httpStatus = http.StatusOK
 	}
 	c.JSON(httpStatus, ApiResponse{
-		RequestId: tools.GenUUID(),
+		RequestId: tools.GenUUID16(),
 		ErrCode:   code,
 		Message:   message,
 		Data:      data,

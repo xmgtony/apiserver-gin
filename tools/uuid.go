@@ -1,14 +1,24 @@
 package tools
 
-import "github.com/satori/go.uuid"
+import (
+	"github.com/satori/go.uuid"
+	"strings"
+)
 
 // GenUUID 生成一个随机的唯一ID
 func GenUUID() string {
 	return uuid.NewV4().String()
 }
 
-// GenUUIDFromStr 从指定的字符串生成uuid
-func GenUUIDFromStr(str string) (string, error) {
+// GenUUID32 截取uuid前16位
+func GenUUID16() string {
+	uuidStr := uuid.NewV4().String()
+	uuidStr = strings.ReplaceAll(uuidStr, "-", "")
+	return uuidStr[0:16]
+}
+
+// ParseUUIDFromStr 从指定的字符串生成uuid
+func ParseUUIDFromStr(str string) (string, error) {
 	u, err := uuid.FromString(str)
 	if err != nil {
 		return "", err
