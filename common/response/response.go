@@ -2,6 +2,7 @@ package response
 
 import (
 	error2 "apidemo-gin/common/error"
+	"apidemo-gin/tools"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -26,7 +27,7 @@ func SendJson(c *gin.Context, err error, data interface{}) {
 		httpStatus = http.StatusOK
 	}
 	c.JSON(httpStatus, ApiResponse{
-		RequestId: nil,
+		RequestId: tools.GenUUID(),
 		ErrCode:   code,
 		Message:   message,
 		Data:      data,
