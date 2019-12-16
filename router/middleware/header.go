@@ -1,6 +1,8 @@
 package middleware
 
 import (
+	"apidemo-gin/common/constant"
+	"apidemo-gin/tools"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
@@ -15,8 +17,8 @@ func NoCache(c *gin.Context) {
 	c.Next()
 }
 
-// Options 
-func Options(c *gin.Context)  {
+// Options
+func Options(c *gin.Context) {
 	if strings.ToUpper(c.Request.Method) != "OPTIONS" {
 		c.Next()
 	} else {
@@ -30,7 +32,7 @@ func Options(c *gin.Context)  {
 }
 
 // Secure 添加安全控制和资源访问
-func Secure(c *gin.Context)  {
+func Secure(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
 	c.Header("X-Frame-Options", "DENY")
 	c.Header("X-Content-Type-Options", "nosniff")
@@ -38,4 +40,15 @@ func Secure(c *gin.Context)  {
 	if c.Request.TLS != nil {
 		c.Header("Strict-Transport-Security", "max-age=31536000")
 	}
+	c.Next()
+}
+
+// RequestId 用来设置和透传requestId
+func RequestId(c *gin.Context) {
+	requestId := tools.GenUUID16()
+	c.Header("X-Request-Id", requestId)
+
+	// 设置requestId到context中，便于后面调用链的透传
+	c.Set(constant.RequestId, requestId)
+	c.Next()
 }

@@ -25,7 +25,8 @@ func main() {
 	gin.SetMode(conf.Cfg.Mode)
 	// Create gin engine
 	g := gin.New()
-	// run mode
+
+	// 便于在外部挂载middleware，添加到当前slice中即可
 	var middlewares []gin.HandlerFunc
 
 	router.Load(g, middlewares...)
@@ -54,7 +55,7 @@ func pingServer() error {
 		}
 		log.Printf("waiting for the server online, sleep %d second", seconds)
 		time.Sleep(time.Second * 1)
-		seconds ++
+		seconds++
 	}
 	return errors.New("Cannot connect to this server")
 }
