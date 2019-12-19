@@ -1,6 +1,8 @@
 package tools
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestGenUUID(t *testing.T) {
 	uuid := GenUUID()
