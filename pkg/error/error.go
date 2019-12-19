@@ -18,18 +18,21 @@ func New(code Code, err error) *BizErr {
 		Err:  err,
 	}
 }
+
 // Append 用来在错误信息上追加自己传递的message
 func (b *BizErr) Append(message string) error {
 	b.Message += "," + message
 	return b
 }
+
 // Appendf 用来追加并格式化错误信息
 func (b *BizErr) Appendf(format string, args ...interface{}) error {
 	b.Message += "," + fmt.Sprintf(format, args)
 	return b
 }
+
 // DecodeBizErr 用来解err，将err还原为 code和message
-func DecodeBizErr(err error) (int, string)  {
+func DecodeBizErr(err error) (int, string) {
 	if err == nil {
 		return SUCCESS.ErrCode, SUCCESS.Message
 	}

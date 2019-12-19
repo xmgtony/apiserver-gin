@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"apidemo-gin/common/constant"
+	"apidemo-gin/pkg/constant"
 	"apidemo-gin/tools"
 	"github.com/gin-gonic/gin"
 	"net/http"
