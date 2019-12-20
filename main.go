@@ -5,6 +5,7 @@ import (
 	"apidemo-gin/conf"
 	"apidemo-gin/router"
 	"flag"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"log"
@@ -31,7 +32,7 @@ func main() {
 
 	router.Load(g, middlewares...)
 	//Routes
-	log.Printf("starting on port %s", conf.Cfg.Port)
+	log.Printf("start up success on port %s", conf.Cfg.Port)
 
 	// health check
 	go func() {
@@ -57,5 +58,5 @@ func pingServer() error {
 		time.Sleep(time.Second * 1)
 		seconds++
 	}
-	return errors.New("Cannot connect to this server")
+	return errors.New(fmt.Sprintf("Can not connect to this server on port %s", conf.Cfg.Port))
 }

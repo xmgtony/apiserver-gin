@@ -1,3 +1,4 @@
+// 配置路由信息
 package router
 
 import (
@@ -17,7 +18,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	g.Use(middleware.RequestId)
 	g.Use(mw...)
 
-	// 404 handle
+	// 404
 	g.NoRoute(func(c *gin.Context) {
 		c.String(http.StatusNotFound, "handler not found!")
 	})
