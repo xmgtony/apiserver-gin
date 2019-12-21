@@ -28,9 +28,6 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	checkGroup := g.Group("/check", check.LocalIPCheck)
 	{
 		checkGroup.GET("/health", check.HealthCheck)
-		checkGroup.GET("/disk", check.DiskCheck)
-		checkGroup.GET("/cpu", check.CPUCheck)
-		checkGroup.GET("/mem", check.RAMCheck)
 	}
 
 	// User route

@@ -14,16 +14,15 @@ import (
 	"time"
 )
 
-// 配置文件名称
+// Profile name, no suffix required, default "config"
+// For example, "config" stands for config.yml
 var configFile string
 
 func main() {
 	flag.StringVar(&configFile, "config", "", "config file name")
 	flag.Parse()
 	// 加载配置文件
-	if err := conf.LoadConfig(configFile); err != nil {
-		panic(err)
-	}
+	conf.Load(configFile)
 	// 初始化Redis Client
 	cache.RedisInit()
 	defer cache.RedisClose()
@@ -31,31 +30,29 @@ func main() {
 	model.DBInit()
 	defer model.DBClose()
 
+	// 便于在外部挂载middleware，添加到当前slice中即可
+	var middlewares []gin.HandlerFunc
 	// 设置gin启动模式，必须在创建gin实例之前
 	gin.SetMode(conf.Cfg.Mode)
 	// Create gin engine
 	g := gin.New()
-
-	// 便于在外部挂载middleware，添加到当前slice中即可
-	var middlewares []gin.HandlerFunc
-
 	router.Load(g, middlewares...)
 	//Routes
 	log.Printf("start up success on port %s", conf.Cfg.Port)
 
 	// health check
 	go func() {
-		if err := pingServer(); err != nil {
+		if err := ping(); err != nil {
 			log.Fatal("the server no response")
 		}
 		log.Println("the server started success!")
 	}()
-	// start server
-	log.Printf(http.ListenAndServe(conf.Cfg.Port, g).Error())
+	// Start on the specified port
+	log.Printf(g.Run(conf.Cfg.Port).Error())
 }
 
 // PingServer is be used to check server status
-func pingServer() error {
+func ping() error {
 	seconds := 1
 	url := conf.Cfg.Url + conf.Cfg.Port + "/check/health"
 	for i := 0; i < conf.Cfg.MaxPingCount; i++ {

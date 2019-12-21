@@ -42,15 +42,14 @@ type RedisCfg struct {
 	IdleTimeout  int    `mapstructure:"idle-timeout"`
 }
 
-// LoadConfig is a loader to load config file.
-func LoadConfig(cfg string) error {
+// Load is a loader to load config file.
+func Load(cfg string) {
 	// 初始化配置文件
 	if err := initConfig(cfg); err != nil {
-		return err
+		panic(err)
 	}
 	// 监控配置文件，并热加载
 	watchConfig()
-	return nil
 }
 
 func initConfig(cfg string) error {
