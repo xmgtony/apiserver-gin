@@ -5,10 +5,10 @@ url: http://localhost #服务本地地址
 max_ping_count: 10 #自检次数
 # 数据库配置（mysql）
 database:
-  dbname: test #数据库名称
+  dbname: go_test #数据库名称
   host: 127.0.0.1 #数据库服务地址
   port: 3306 #数据库端口
-  username: demo #用户名
+  username: root #用户名(实际线上不可使用root,请授权一个账户)
   password: 123456 #密码
   maximum-pool-size: 300  #连接池最大连接数
   maximum-idle-size: 20  #连接池最大空闲数

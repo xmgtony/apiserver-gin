@@ -9,10 +9,10 @@ import (
 
 // ApiResponse 代表一个响应给客户端的消息结构，包括错误码，错误消息，响应数据
 type ApiResponse struct {
-	RequestId string      `json:"request_id"` // 请求的唯一ID
-	ErrCode   int         `json:"err_code"`   // 错误码，0表示无错误
-	Message   string      `json:"message"`    // 提示信息
-	Data      interface{} `json:"data"`       // 响应数据，一般从这里前端从这个里面取出数据展示
+	RequestId string      `json:"request_id"`     // 请求的唯一ID
+	ErrCode   int         `json:"err_code"`       // 错误码，0表示无错误
+	Message   string      `json:"message"`        // 提示信息
+	Data      interface{} `json:"data,omitempty"` // 响应数据，一般从这里前端从这个里面取出数据展示
 }
 
 //SendJson 发送json格式的数据

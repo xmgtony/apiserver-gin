@@ -1,8 +1,9 @@
 package main
 
 import (
-	_ "apidemo-gin/cache"
+	"apidemo-gin/cache"
 	"apidemo-gin/conf"
+	"apidemo-gin/model"
 	"apidemo-gin/router"
 	"flag"
 	"fmt"
@@ -13,6 +14,7 @@ import (
 	"time"
 )
 
+// 配置文件名称
 var configFile string
 
 func main() {
@@ -22,6 +24,13 @@ func main() {
 	if err := conf.LoadConfig(configFile); err != nil {
 		panic(err)
 	}
+	// 初始化Redis Client
+	cache.RedisInit()
+	defer cache.RedisClose()
+	// 初始化数据库信息
+	model.DBInit()
+	defer model.DBClose()
+
 	// 设置gin启动模式，必须在创建gin实例之前
 	gin.SetMode(conf.Cfg.Mode)
 	// Create gin engine

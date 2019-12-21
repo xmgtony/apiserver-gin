@@ -3,6 +3,7 @@ package router
 
 import (
 	"apidemo-gin/handler/check"
+	userv1 "apidemo-gin/handler/user/v1"
 	"apidemo-gin/router/middleware"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -30,6 +31,12 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		checkGroup.GET("/disk", check.DiskCheck)
 		checkGroup.GET("/cpu", check.CPUCheck)
 		checkGroup.GET("/mem", check.RAMCheck)
+	}
+
+	// User route
+	userGroupV1 := g.Group("/v1/user")
+	{
+		userGroupV1.GET("/:name", userv1.Get)
 	}
 	return g
 }

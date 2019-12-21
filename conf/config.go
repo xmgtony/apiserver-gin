@@ -6,40 +6,41 @@ import (
 	"log"
 	"strings"
 )
+
 var Cfg Config
+
 // Config is application global config
 type Config struct {
-	Mode string `mapstructure:"mode"` // gin启动模式
-	Port string `mapstructure:"port"` // 启动端口
-	ApplicationName string `mapstructure:"name"`//应用名称
-	Url string `mapstructure:"url"` // 应用地址 eg. http://127.0.01
-	MaxPingCount int `mapstructure:"max_ping_count"` // 最大自检次数，用户健康检查
-	Database DataBaseCfg `mapstructure:"database"` // 数据库信息
-	RedisCfg RedisCfg `mapstructure:"redis"` // redis
+	Mode            string      `mapstructure:"mode"`           // gin启动模式
+	Port            string      `mapstructure:"port"`           // 启动端口
+	ApplicationName string      `mapstructure:"name"`           //应用名称
+	Url             string      `mapstructure:"url"`            // 应用地址,用于自检 eg. http://127.0.01
+	MaxPingCount    int         `mapstructure:"max_ping_count"` // 最大自检次数，用户健康检查
+	Database        DataBaseCfg `mapstructure:"database"`       // 数据库信息
+	RedisCfg        RedisCfg    `mapstructure:"redis"`          // redis
 }
 
 // DataBaseCfg is used to configure mysql database
 type DataBaseCfg struct {
-	Dbname string `mapstructure:"dbname"`
-	Host string `mapstructure:"host"`
-	Port string `mapstructure:"port"`
-	Username string `mapstructure:"username"`
-	Password string `mapstructure:"password"`
-	MaximumPoolSize int `mapstructure:"maximum-pool-size"`
-	MaximumIdleSize int `mapstructure:"maximum-idle-size"`
-	LogMode bool `mapstructure:"log-mode"`
+	Dbname          string `mapstructure:"dbname"`
+	Host            string `mapstructure:"host"`
+	Port            string `mapstructure:"port"`
+	Username        string `mapstructure:"username"`
+	Password        string `mapstructure:"password"`
+	MaximumPoolSize int    `mapstructure:"maximum-pool-size"`
+	MaximumIdleSize int    `mapstructure:"maximum-idle-size"`
+	LogMode         bool   `mapstructure:"log-mode"`
 }
+
 // DataBaseCfg is used to configure redis
 type RedisCfg struct {
-	Addr string `mapstructure:"address"`
-	Password string `mapstructure:"password"`
-	Db int `mapstructure:"db"`
-	PoolSize int `mapstructure:"pool-size"`
-	MinIdleConns int `mapstructure:"min-idle-conns"`
-	IdleTimeout int `mapstructure:"idle-timeout"`
+	Addr         string `mapstructure:"address"`
+	Password     string `mapstructure:"password"`
+	Db           int    `mapstructure:"db"`
+	PoolSize     int    `mapstructure:"pool-size"`
+	MinIdleConns int    `mapstructure:"min-idle-conns"`
+	IdleTimeout  int    `mapstructure:"idle-timeout"`
 }
-
-
 
 // LoadConfig is a loader to load config file.
 func LoadConfig(cfg string) error {
@@ -52,7 +53,7 @@ func LoadConfig(cfg string) error {
 	return nil
 }
 
-func initConfig(cfg string) error  {
+func initConfig(cfg string) error {
 	if cfg != "" {
 		viper.SetConfigFile(cfg)
 	} else {
@@ -63,9 +64,8 @@ func initConfig(cfg string) error  {
 	viper.SetConfigType("yaml")
 	viper.AutomaticEnv()
 	viper.SetEnvPrefix("APPLICATION")
-	replacer := strings.NewReplacer(".","_")
+	replacer := strings.NewReplacer(".", "_")
 	viper.SetEnvKeyReplacer(replacer)
-
 
 	// 解析配置文件
 	if err := viper.ReadInConfig(); err != nil {

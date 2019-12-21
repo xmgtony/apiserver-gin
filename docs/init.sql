@@ -1,5 +1,5 @@
-CREATE DATABASE `demo`;
-USE `demo`;
+CREATE DATABASE `go_test`;
+USE `go_test`;
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` {

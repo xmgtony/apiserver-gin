@@ -1,10 +1,12 @@
 package model
 
 import (
-	"apidemo-gin/conf"
+	. "apidemo-gin/conf"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 )
+
 // DataBase 用来组织数据库信息，实际使用中可能会有Master和Slave主从库
 type DataBase struct {
 	Master *gorm.DB
@@ -12,15 +14,15 @@ type DataBase struct {
 
 var DB *DataBase
 
-func (dataBase *DataBase) Init() {
-	cfg := conf.Cfg.Database
-	_ = &DataBase{
+func DBInit() {
+	cfg := Cfg.Database
+	DB = &DataBase{
 		Master: openDB(cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.Dbname),
 	}
 }
 
 func openDB(user, password, host, port, dbname string) *gorm.DB {
-	dsn := fmt.Sprintf("%s:%s@%s:%s/%s?charset=utf8&parseTime=True&loc=Local",
+	dsn := fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		user,
 		password,
 		host,
@@ -31,13 +33,13 @@ func openDB(user, password, host, port, dbname string) *gorm.DB {
 		panic(err)
 	}
 	// 设置日志格式和连接池大小
-	db.LogMode(conf.Cfg.Database.LogMode)
-	db.DB().SetMaxOpenConns(conf.Cfg.Database.MaximumPoolSize)
-	db.DB().SetMaxIdleConns(conf.Cfg.Database.MaximumIdleSize)
+	db.LogMode(Cfg.Database.LogMode)
+	db.DB().SetMaxOpenConns(Cfg.Database.MaximumPoolSize)
+	db.DB().SetMaxIdleConns(Cfg.Database.MaximumIdleSize)
 
 	return db
 }
 
-func (dataBase *DataBase) Close()  {
+func DBClose() {
 	_ = DB.Master.Close()
 }
