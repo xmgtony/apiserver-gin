@@ -1,6 +1,7 @@
 package time
 
 import (
+	"database/sql/driver"
 	"fmt"
 	"time"
 )
@@ -27,6 +28,28 @@ func (t *JsonTime) UnmarshalJSON(data []byte) error {
 		*t = JsonTime(st)
 	} else {
 		return err
+	}
+	return nil
+}
+
+func (t JsonTime) Value() (driver.Value, error) {
+	tm := time.Time(t)
+	return tm.Format(timeLayout), nil
+}
+
+func (t *JsonTime) Scan(value interface{}) error {
+	if value == nil {
+		return nil
+	}
+	switch st := value.(type) {
+	case time.Time:
+		*t = JsonTime(st)
+	case string:
+		tm, err := time.Parse(timeLayout, st)
+		if err != nil {
+			return err
+		}
+		*t = JsonTime(tm)
 	}
 	return nil
 }

@@ -37,7 +37,6 @@ func main() {
 	// Create gin engine
 	g := gin.New()
 	router.Load(g, middlewares...)
-	//Routes
 	log.Printf("start up success on port %s", conf.Cfg.Port)
 
 	// health check

@@ -1,7 +1,7 @@
 package response
 
 import (
-	error2 "apidemo-gin/pkg/error"
+	error2 "apidemo-gin/pkg/errcode"
 	"apidemo-gin/tools"
 	"github.com/gin-gonic/gin"
 	"net/http"

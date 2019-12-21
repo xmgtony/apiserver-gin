@@ -1,4 +1,4 @@
-package error
+package errcode
 
 // 自定义错误码，通常错误由错误码和错误信息两部分组成，便于跟踪和维护错误信息
 // 错误码为0表示成功
@@ -21,14 +21,15 @@ var (
 		Message: "请先完成授权",
 	}
 
+	// 参数绑定错误
+	BindingErr = &Code{
+		ErrCode: 40003,
+		Message: "参数绑定错误",
+	}
+
 	// 系统错误（按需求细化）
 	SystemErr = &Code{
 		ErrCode: 50000,
 		Message: "系统错误",
 	}
 )
-
-type Code struct {
-	ErrCode int
-	Message string
-}

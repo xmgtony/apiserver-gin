@@ -11,8 +11,8 @@ import (
 // 其中modified 设置为 ON UPDATE CURRENT_TIMESTAMP ，以上仅供参考
 // gorm.Model 也提供了类似BaseModel功能，并且根据此model字段做了一些自动逻辑。
 type BaseModel struct {
-	Id            int64         `gorm:"column:id;primary_key;AUTO_INCREMENT" json:"id"`
-	EnabledStatus int8          `gorm:"column:enabled_status;type:tinyint;not null" json:"-"`
-	Created       time.JsonTime `gorm:"column:created;type:datetime" json:"created" time_format:"2006-01-02 15:04:05"`
-	Modified      time.JsonTime `gorm:"column:modified;type:timestamp" json:"modified" time_format:"2006-01-02 15:04:05"`
+	Id            int64          `gorm:"column:id;primary_key;AUTO_INCREMENT" json:"id"`
+	EnabledStatus *int8          `gorm:"column:enabled_status;type:tinyint;default:1" json:"-"`
+	Created       time.JsonTime  `gorm:"column:created;type:datetime;default:CURRENT_TIMESTAMP" json:"created"`
+	Modified      *time.JsonTime `gorm:"column:modified;type:timestamp;default:CURRENT_TIMESTAMP" json:"modified"`
 }

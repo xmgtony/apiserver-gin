@@ -34,6 +34,7 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	userGroupV1 := g.Group("/v1/user")
 	{
 		userGroupV1.GET("/:name", userv1.Get)
+		userGroupV1.POST("/create", userv1.Create)
 	}
 	return g
 }
