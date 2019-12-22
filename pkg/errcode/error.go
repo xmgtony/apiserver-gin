@@ -32,6 +32,15 @@ func New(code *Code, err error) *BizErr {
 	}
 }
 
+// NewCode 创建一个新的错误码, 一些场景下定义错误码比较繁琐，只是简单的展示错误信息
+// 建议尽量使用定义好的错误码
+func NewCode(code int, message string) *Code {
+	return &Code{
+		ErrCode: code,
+		Message: message,
+	}
+}
+
 // Append 用来在错误信息上追加自己传递的message
 func (b *BizErr) Append(message string) error {
 	b.Message += "," + message
