@@ -10,19 +10,19 @@ import (
 	"time"
 )
 
-var logger *zap.Logger
+var Log *zap.Logger
 
 func LoggerInit() {
-	logger = zap.New(newCore(),
+	Log = zap.New(newCore(),
 		zap.AddCaller(),
 		zap.Fields(zap.String("appName", Cfg.ApplicationName)))
 }
 
 func New() *zap.Logger {
-	if logger == nil {
+	if Log == nil {
 		LoggerInit()
 	}
-	return logger
+	return Log
 }
 
 func newCore() zapcore.Core {
@@ -80,29 +80,4 @@ func CustomTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 		timeLayout = constant.TimeLayoutMs
 	}
 	enc.AppendString(t.Format(timeLayout))
-}
-
-// 包装下面方法，为了减少外面调用的层次(纯粹是懒)
-func Debug(msg string, filed ...zap.Field) {
-	logger.Debug(msg, filed...)
-}
-
-func Info(msg string, filed ...zap.Field) {
-	logger.Info(msg, filed...)
-}
-
-func Warn(msg string, filed ...zap.Field) {
-	logger.Warn(msg, filed...)
-}
-
-func Error(msg string, filed ...zap.Field) {
-	logger.Error(msg, filed...)
-}
-
-func Fatal(msg string, filed ...zap.Field) {
-	logger.Fatal(msg, filed...)
-}
-
-func Sync() {
-	_ = logger.Sync()
 }

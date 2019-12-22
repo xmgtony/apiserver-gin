@@ -21,7 +21,7 @@ func Get(c *gin.Context) {
 	username := c.Param("name")
 	user, err := usermodel.GetUser(username)
 	if err != nil {
-		response.SendJson(c, err, nil)
+		response.SendJson(c, errcode.NotFoundErr, nil)
 		return
 	}
 	response.SendJson(c, nil, user)

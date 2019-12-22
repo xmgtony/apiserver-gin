@@ -27,9 +27,15 @@ var (
 		Message: "参数绑定错误",
 	}
 
+	// 没有查询到记录
+	NotFoundErr = &Code{
+		ErrCode: 40004,
+		Message: "未查询到记录",
+	}
+
 	// 系统错误（按需求细化）
 	SystemErr = &Code{
 		ErrCode: 50000,
-		Message: "系统错误",
+		Message: "系统异常",
 	}
 )

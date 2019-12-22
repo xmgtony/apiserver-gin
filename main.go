@@ -31,7 +31,6 @@ func main() {
 	defer model.DBClose()
 	// 初始化logger
 	log.LoggerInit()
-	defer log.Sync()
 	// 便于在外部挂载middleware，添加到当前slice中即可
 	var middlewares []gin.HandlerFunc
 	// 设置gin启动模式，必须在创建gin实例之前
@@ -42,12 +41,12 @@ func main() {
 	// health check
 	go func() {
 		if err := ping(); err != nil {
-			log.Fatal("the server no response")
+			log.Log.Fatal("the server no response")
 		}
-		log.Info("the server started success!")
+		log.Log.Info("the server started success!")
 	}()
 	// Start on the specified port
-	log.Info(g.Run(conf.Cfg.Port).Error())
+	log.Log.Info(g.Run(conf.Cfg.Port).Error())
 }
 
 // PingServer is be used to check server status
@@ -59,7 +58,7 @@ func ping() error {
 		if err == nil && resp != nil && resp.StatusCode == http.StatusOK {
 			return nil
 		}
-		log.Info(fmt.Sprintf("waiting for the server online, sleep %d second", seconds))
+		log.Log.Info(fmt.Sprintf("waiting for the server online, sleep %d second", seconds))
 		time.Sleep(time.Second * 1)
 		seconds++
 	}
