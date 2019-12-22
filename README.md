@@ -1,6 +1,5 @@
 ### apidemo-gin
-基于gin的api构键脚手架，整个项目参考了生产项目的布局架构，也参考了golang项目标准布局，还有学习golang过程中见过的比较好的项目结构。
-[golang项目标准布局](https://github.com/golang-standards/project-layout)
+基于gin的api构键脚手架，整个项目参考了生产项目的布局架构，也参考了[golang项目标准布局](https://github.com/golang-standards/project-layout)，还有学习golang过程中见过的比较好的项目结构。
 整个项目拉下来，基本做下简单的改造，就可以实际使用在生成中，特别对于新手学习搭建项目，熟悉项目规划，了解生产项目结构和细节设计感觉会有很大帮助。
 
 ### 下一步计划
