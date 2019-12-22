@@ -18,6 +18,7 @@ type Config struct {
 	MaxPingCount    int         `mapstructure:"max_ping_count"` // 最大自检次数，用户健康检查
 	Database        DataBaseCfg `mapstructure:"database"`       // 数据库信息
 	RedisCfg        RedisCfg    `mapstructure:"redis"`          // redis
+	LogCfg          LogCfg      `mapstructure:"log"`            // uber zap
 }
 
 // DataBaseCfg is used to configure mysql database
@@ -32,7 +33,7 @@ type DataBaseCfg struct {
 	LogMode         bool   `mapstructure:"log-mode"`
 }
 
-// DataBaseCfg is used to configure redis
+// RedisCfg is used to configure redis
 type RedisCfg struct {
 	Addr         string `mapstructure:"address"`
 	Password     string `mapstructure:"password"`
@@ -40,6 +41,19 @@ type RedisCfg struct {
 	PoolSize     int    `mapstructure:"pool-size"`
 	MinIdleConns int    `mapstructure:"min-idle-conns"`
 	IdleTimeout  int    `mapstructure:"idle-timeout"`
+}
+
+// LogCfg is used to configure uber zap
+type LogCfg struct {
+	Level      string `mapstructure:"level"`
+	FileName   string `mapstructure:"file-name"`
+	TimeFormat string `mapstructure:"time-format"`
+	MaxSize    int    `mapstructure:"max-size"`
+	MaxBackups int    `mapstructure:"max-backups"`
+	MaxAge     int    `mapstructure:"max-age"`
+	Compress   bool   `mapstructure:"compress"`
+	LocalTime  bool   `mapstructure:"local-time"`
+	Console    bool   `mapstructure:"console"`
 }
 
 // Load is a loader to load config file.

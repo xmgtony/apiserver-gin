@@ -1,6 +1,6 @@
 mode: debug #启动模式 debug, release, test
 port: :8080 #启动端口
-name: apiserver #服务名称
+name: apidemo-gin #服务名称
 url: http://localhost #服务本地地址
 max_ping_count: 10 #自检次数
 # 数据库配置（mysql）
@@ -21,4 +21,15 @@ redis:
   pool-size: 100 #同一时刻池中最大连接数
   min-idle-conns: 10 #建立连接时维持的最小空闲连接数量，避免新建连接速度慢
   idle-timeout: 3000 #最大空闲时长，单位是秒s
+# 日志配置(使用zap&lumberjack)
+log:
+  level: debug
+  file-name: web-server.log
+  time-format: 2006-01-02 15:04:05.000
+  max-size: 500 #单个日志文件大小MB
+  max-backups: 7
+  max-age: 7 #Days
+  compress: true
+  local-time: false
+  console: true #是否打印到控制台
 

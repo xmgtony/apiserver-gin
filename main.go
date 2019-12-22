@@ -4,12 +4,12 @@ import (
 	"apidemo-gin/cache"
 	"apidemo-gin/conf"
 	"apidemo-gin/model"
+	"apidemo-gin/pkg/log"
 	"apidemo-gin/router"
 	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
-	"log"
 	"net/http"
 	"time"
 )
@@ -29,7 +29,9 @@ func main() {
 	// 初始化数据库信息
 	model.DBInit()
 	defer model.DBClose()
-
+	// 初始化logger
+	log.LoggerInit()
+	defer log.Sync()
 	// 便于在外部挂载middleware，添加到当前slice中即可
 	var middlewares []gin.HandlerFunc
 	// 设置gin启动模式，必须在创建gin实例之前
@@ -37,17 +39,15 @@ func main() {
 	// Create gin engine
 	g := gin.New()
 	router.Load(g, middlewares...)
-	log.Printf("start up success on port %s", conf.Cfg.Port)
-
 	// health check
 	go func() {
 		if err := ping(); err != nil {
 			log.Fatal("the server no response")
 		}
-		log.Println("the server started success!")
+		log.Info("the server started success!")
 	}()
 	// Start on the specified port
-	log.Printf(g.Run(conf.Cfg.Port).Error())
+	log.Info(g.Run(conf.Cfg.Port).Error())
 }
 
 // PingServer is be used to check server status
@@ -59,7 +59,7 @@ func ping() error {
 		if err == nil && resp != nil && resp.StatusCode == http.StatusOK {
 			return nil
 		}
-		log.Printf("waiting for the server online, sleep %d second", seconds)
+		log.Info(fmt.Sprintf("waiting for the server online, sleep %d second", seconds))
 		time.Sleep(time.Second * 1)
 		seconds++
 	}
