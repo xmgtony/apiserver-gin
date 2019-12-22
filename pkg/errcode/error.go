@@ -13,7 +13,7 @@ func (b BizErr) Error() string {
 }
 
 // Code 语义上代表错误码，上面的BizErr包含系统错误err，便于调试打印出错误栈
-// 一般展示给前端时该Code就行，Code中已经包含了前端展示所需要的基本信息
+// 一般展示给前端时使用Code就行，Code中已经包含了前端展示所需要的基本信息
 // 把Code单独拆出只是个人习惯了java中使用Enum定义错误码和错误信息的方式
 // 按个人编码习惯可以将BizErr和Code合并，follow your heart
 type Code struct {

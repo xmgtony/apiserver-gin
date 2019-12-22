@@ -18,7 +18,7 @@ var (
 	// 需要授权
 	RequireAuth = &Code{
 		ErrCode: 40002,
-		Message: "请先完成授权",
+		Message: "无访问权限，请先登录",
 	}
 
 	// 参数绑定错误
@@ -31,6 +31,12 @@ var (
 	NotFoundErr = &Code{
 		ErrCode: 40004,
 		Message: "未查询到记录",
+	}
+
+	// 用户名或者密码错误
+	UserLoginErr = &Code{
+		ErrCode: 40005,
+		Message: "用户名或者密码错误",
 	}
 
 	// 系统错误（按需求细化）

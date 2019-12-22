@@ -3,6 +3,7 @@ module apidemo-gin
 go 1.13
 
 require (
+	github.com/appleboy/gin-jwt/v2 v2.6.2
 	github.com/fsnotify/fsnotify v1.4.7
 	github.com/gin-gonic/gin v1.5.0
 	github.com/go-redis/redis/v7 v7.0.0-beta.4

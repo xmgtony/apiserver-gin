@@ -16,9 +16,10 @@ type Config struct {
 	ApplicationName string      `mapstructure:"name"`           //应用名称
 	Url             string      `mapstructure:"url"`            // 应用地址,用于自检 eg. http://127.0.01
 	MaxPingCount    int         `mapstructure:"max_ping_count"` // 最大自检次数，用户健康检查
-	Database        DataBaseCfg `mapstructure:"database"`       // 数据库信息
-	RedisCfg        RedisCfg    `mapstructure:"redis"`          // redis
-	LogCfg          LogCfg      `mapstructure:"log"`            // uber zap
+	JwtSecret       string      `mapstructure:"jwt-secret"`
+	Database        DataBaseCfg `mapstructure:"database"` // 数据库信息
+	RedisCfg        RedisCfg    `mapstructure:"redis"`    // redis
+	LogCfg          LogCfg      `mapstructure:"log"`      // uber zap
 }
 
 // DataBaseCfg is used to configure mysql database

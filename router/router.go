@@ -31,10 +31,19 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		checkGroup.GET("/health", check.HealthCheck)
 	}
 
+	// ---- user login use jwt ---
+	ginJWTMiddleware := middleware.Jwt()
+	g.POST("/login", ginJWTMiddleware.LoginHandler)
+
 	// User route
-	userGroupV1 := g.Group("/v1/user")
+	auth := g.Group("/auth")
+	auth.GET("/refresh_token", ginJWTMiddleware.RefreshHandler)
+
+	userGroupV1 := g.Group("/v1/user", ginJWTMiddleware.MiddlewareFunc())
 	{
 		userGroupV1.GET("/:name", userv1.Get)
+		// 创建用户只是为了演示用法，并没有对数据库做用户名唯一性限制
+		// 这样登录时，按用户名校验，如果数据库存在同一用户名用户可能会有问题
 		userGroupV1.POST("/create", userv1.Create)
 	}
 	return g

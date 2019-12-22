@@ -3,8 +3,10 @@ package middleware
 import (
 	"apidemo-gin/pkg/constant"
 	. "apidemo-gin/pkg/log"
+	"bytes"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"io/ioutil"
 	"time"
 )
 
@@ -13,9 +15,28 @@ func Logger(c *gin.Context) {
 	// 请求前
 	t := time.Now()
 	reqPath := c.Request.URL.Path
-	Log.Info("request start", zap.String(constant.RequestId, c.GetString(constant.RequestId)), zap.String("path", reqPath))
+	reqId := c.GetString(constant.RequestId)
+	method := c.Request.Method
+	ip := c.ClientIP()
+	requestBody, err := ioutil.ReadAll(c.Request.Body)
+	if err != nil {
+		requestBody = []byte{}
+	}
+	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(requestBody))
+
+	Log.Info("New request start",
+		zap.String(constant.RequestId, reqId),
+		zap.String("host", ip),
+		zap.String("path", reqPath),
+		zap.String("method", method),
+		zap.String("body", string(requestBody)))
+
 	c.Next()
 	// 请求后
 	latency := time.Since(t)
-	Log.Info("request end", zap.String(constant.RequestId, c.GetString(constant.RequestId)), zap.String("path", reqPath), zap.Duration("cost", latency))
+	Log.Info("New request end",
+		zap.String(constant.RequestId, reqId),
+		zap.String("host", ip),
+		zap.String("path", reqPath),
+		zap.Duration("cost", latency))
 }
