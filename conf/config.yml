@@ -31,5 +31,5 @@ log:
   max-age: 7 #Days
   compress: true
   local-time: false
-  console: true #是否打印到控制台
+  console: true #是否打印到控制台,true打印到控制台，false记录到文件
 

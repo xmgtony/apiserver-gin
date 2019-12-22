@@ -60,6 +60,8 @@ func newCore() zapcore.Core {
 	if Cfg.LogCfg.Console {
 		writeSyncer = zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout))
 	} else {
+		// 输出到文件时，不使用彩色日志，否则会出现乱码
+		encoder.EncodeLevel = zapcore.CapitalLevelEncoder
 		writeSyncer = zapcore.NewMultiWriteSyncer(zapcore.AddSync(lumber))
 	}
 	// Tips: 如果使用zapcore.NewJSONEncoder
