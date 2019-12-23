@@ -43,7 +43,7 @@ func Create(c *gin.Context) {
 
 	err = userservicev1.Create(&user)
 	if err != nil {
-		response.SendJson(c, err, nil)
+		response.SendJson(c, errcode.CreateUserErr, nil)
 		return
 	}
 	response.SendJson(c, nil, nil)

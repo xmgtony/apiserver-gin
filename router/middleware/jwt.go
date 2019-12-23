@@ -19,25 +19,26 @@ var identityKey string = "jwt-key"
 
 func Jwt() *jwt.GinJWTMiddleware {
 	jwtMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
-		Realm:             conf.Cfg.ApplicationName,
-		Key:               []byte(conf.Cfg.JwtSecret),
-		Timeout:           time.Hour * 24,
-		MaxRefresh:        time.Hour * 24,
-		IdentityKey:       identityKey,
-		TokenLookup:       "header: Authorization, query: token, cookie: jwt",
-		TokenHeadName:     "Bearer",
-		PayloadFunc:       payloadFunc,
-		IdentityHandler:   identityHandler,
-		Authenticator:     authenticator,
-		Authorizator:      authorizator,
-		Unauthorized:      unauthorized,
-		LoginResponse:     loginResponse,
-		TimeFunc:          time.Now,
-		SendCookie:        false,
-		SecureCookie:      false,
-		CookieHTTPOnly:    true,
-		SendAuthorization: false,
-		DisabledAbort:     false,
+		Realm:                 conf.Cfg.ApplicationName,
+		Key:                   []byte(conf.Cfg.JwtSecret),
+		Timeout:               time.Hour * 24,
+		MaxRefresh:            time.Hour * 24,
+		IdentityKey:           identityKey,
+		TokenLookup:           "header: Authorization, query: token, cookie: jwt",
+		TokenHeadName:         "Bearer",
+		PayloadFunc:           payloadFunc,
+		IdentityHandler:       identityHandler,
+		Authenticator:         authenticator,
+		Authorizator:          authorizator,
+		Unauthorized:          unauthorized,
+		LoginResponse:         loginResponse,
+		HTTPStatusMessageFunc: HTTPStatusMessageFunc,
+		TimeFunc:              time.Now,
+		SendCookie:            false,
+		SecureCookie:          false,
+		CookieHTTPOnly:        true,
+		SendAuthorization:     false,
+		DisabledAbort:         false,
 	})
 	if err != nil {
 		Log.Fatal("Jwt create error", zap.String("error", err.Error()))
@@ -91,7 +92,7 @@ func authorizator(data interface{}, c *gin.Context) bool {
 }
 
 func unauthorized(c *gin.Context, code int, message string) {
-	response.SendJson(c, errcode.RequireAuth, nil)
+	response.SendJson(c, errcode.NewCode(code, message), nil)
 }
 
 // loginResponse 自定义响应格式，与整个应用统一
@@ -100,4 +101,12 @@ func loginResponse(c *gin.Context, code int, jwtToken string, expire time.Time) 
 	respMap["token"] = jwtToken
 	respMap["expire"] = time2.JsonTime(expire)
 	response.SendJson(c, nil, respMap)
+}
+
+func HTTPStatusMessageFunc(e error, c *gin.Context) string {
+	if err, ok := e.(*errcode.Code); ok {
+		return err.Message
+	}
+	// 需要授权
+	return errcode.RequireAuth.Message
 }

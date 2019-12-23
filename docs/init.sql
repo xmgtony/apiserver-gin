@@ -5,7 +5,7 @@ USE `go_test`;
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
     `id` bigint unsigned auto_increment PRIMARY KEY,
-    `name` varchar (32) not null comment '用户姓名',
+    `name` varchar (32) not null unique key comment '用户姓名',
     `password` char (64) not null comment '用户密码',
     `enabled_status` tinyint default 1 comment '用户账户有效状态,1正常0无效',
     `birthday` datetime comment '用户出生日期,一般年月日即可',
