@@ -1,7 +1,7 @@
 package cache
 
 import (
-	. "apidemo-gin/conf"
+	"apidemo-gin/pkg/config"
 	"github.com/go-redis/redis/v7"
 	"log"
 	"time"
@@ -11,7 +11,7 @@ var redisClient *redis.Client
 
 // 初始化redisClient
 func RedisInit() {
-	redisCfg := Cfg.RedisCfg
+	redisCfg := config.Cfg.RedisCfg
 	redisClient = redis.NewClient(&redis.Options{
 		DB:           redisCfg.Db,
 		Addr:         redisCfg.Addr,

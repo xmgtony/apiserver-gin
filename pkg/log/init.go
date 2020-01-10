@@ -1,7 +1,7 @@
 package log
 
 import (
-	. "apidemo-gin/conf"
+	"apidemo-gin/pkg/config"
 	"apidemo-gin/pkg/constant"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -15,7 +15,7 @@ var Log *zap.Logger
 func LoggerInit() {
 	Log = zap.New(newCore(),
 		zap.AddCaller(),
-		zap.Fields(zap.String("appName", Cfg.ApplicationName)))
+		zap.Fields(zap.String("appName", config.Cfg.ApplicationName)))
 }
 
 func New() *zap.Logger {
@@ -28,18 +28,18 @@ func New() *zap.Logger {
 func newCore() zapcore.Core {
 	// rolling log
 	lumber := &lumberjack.Logger{
-		Filename:   Cfg.LogCfg.FileName,
-		MaxSize:    Cfg.LogCfg.MaxSize,
-		MaxAge:     Cfg.LogCfg.MaxAge,
-		MaxBackups: Cfg.LogCfg.MaxBackups,
-		LocalTime:  Cfg.LogCfg.LocalTime,
-		Compress:   Cfg.LogCfg.Compress,
+		Filename:   config.Cfg.LogCfg.FileName,
+		MaxSize:    config.Cfg.LogCfg.MaxSize,
+		MaxAge:     config.Cfg.LogCfg.MaxAge,
+		MaxBackups: config.Cfg.LogCfg.MaxBackups,
+		LocalTime:  config.Cfg.LogCfg.LocalTime,
+		Compress:   config.Cfg.LogCfg.Compress,
 	}
 	// log level
 	atomicLevel := zap.NewAtomicLevel()
 	defaultLevel := zapcore.DebugLevel
 	// 会解码传递的日志级别，生成新的日志级别
-	_ = (&defaultLevel).UnmarshalText([]byte(Cfg.LogCfg.Level))
+	_ = (&defaultLevel).UnmarshalText([]byte(config.Cfg.LogCfg.Level))
 	atomicLevel.SetLevel(defaultLevel)
 	// encoder 这部分没有放到配置文件，因为一般配置一次就不会改动
 	encoder := zapcore.EncoderConfig{
@@ -57,7 +57,7 @@ func newCore() zapcore.Core {
 		EncodeName:     zapcore.FullNameEncoder,
 	}
 	var writeSyncer zapcore.WriteSyncer
-	if Cfg.LogCfg.Console {
+	if config.Cfg.LogCfg.Console {
 		writeSyncer = zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout))
 	} else {
 		// 输出到文件时，不使用彩色日志，否则会出现乱码
@@ -75,7 +75,7 @@ func newCore() zapcore.Core {
 
 // CustomTimeEncoder  implemented zapcore.TimeEncoder
 func CustomTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-	timeLayout := Cfg.LogCfg.TimeFormat
+	timeLayout := config.Cfg.LogCfg.TimeFormat
 	if len(timeLayout) <= 0 {
 		timeLayout = constant.TimeLayoutMs
 	}

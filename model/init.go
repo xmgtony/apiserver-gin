@@ -1,7 +1,7 @@
 package model
 
 import (
-	. "apidemo-gin/conf"
+	"apidemo-gin/pkg/config"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
@@ -15,7 +15,7 @@ type DataBase struct {
 var DB *DataBase
 
 func DBInit() {
-	cfg := Cfg.Database
+	cfg := config.Cfg.Database
 	DB = &DataBase{
 		Master: openDB(cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.Dbname),
 	}
@@ -33,9 +33,9 @@ func openDB(user, password, host, port, dbname string) *gorm.DB {
 		panic(err)
 	}
 	// 设置日志格式和连接池大小
-	db.LogMode(Cfg.Database.LogMode)
-	db.DB().SetMaxOpenConns(Cfg.Database.MaximumPoolSize)
-	db.DB().SetMaxIdleConns(Cfg.Database.MaximumIdleSize)
+	db.LogMode(config.Cfg.Database.LogMode)
+	db.DB().SetMaxOpenConns(config.Cfg.Database.MaximumPoolSize)
+	db.DB().SetMaxIdleConns(config.Cfg.Database.MaximumIdleSize)
 
 	return db
 }

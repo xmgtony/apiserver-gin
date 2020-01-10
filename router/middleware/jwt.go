@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"apidemo-gin/conf"
 	usermodel "apidemo-gin/model/user"
+	"apidemo-gin/pkg/config"
 	"apidemo-gin/pkg/errcode"
 	. "apidemo-gin/pkg/log"
 	"apidemo-gin/pkg/response"
@@ -19,8 +19,8 @@ var identityKey string = "jwt-key"
 
 func Jwt() *jwt.GinJWTMiddleware {
 	jwtMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
-		Realm:                 conf.Cfg.ApplicationName,
-		Key:                   []byte(conf.Cfg.JwtSecret),
+		Realm:                 config.Cfg.ApplicationName,
+		Key:                   []byte(config.Cfg.JwtSecret),
 		Timeout:               time.Hour * 24,
 		MaxRefresh:            time.Hour * 24,
 		IdentityKey:           identityKey,
