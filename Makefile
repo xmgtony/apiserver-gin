@@ -30,4 +30,4 @@ package: build
 	cp -r conf  ${work_dir}/
 	cd ${work_dir}/ && tar -zcvf ${app_name}.tar.gz *
 
-.PHONY: version clean build package
+.PHONY: version clean build package all
