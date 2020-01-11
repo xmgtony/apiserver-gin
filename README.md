@@ -23,4 +23,4 @@ go run main.go -config test.yml
 - 全局应用常量
 - 应用统一入口日志记录中间件实现，类似java中拦截器或者过滤器思想（感谢gin的设计），可以很方便的在入口处记录访问日志。
 - 其他一些坑，代码中有注释
-### 项目使用演示文档完善中...
+### 项目使用文档 [查看](https://github.com/xmgtony/apidemo-gin/blob/master/docs/README.md)
