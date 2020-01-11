@@ -1,8 +1,8 @@
 package main
 
 import (
-	"apidemo-gin/cache"
 	"apidemo-gin/model"
+	"apidemo-gin/pkg/cache"
 	"apidemo-gin/pkg/config"
 	"apidemo-gin/pkg/log"
 	"apidemo-gin/pkg/version"
