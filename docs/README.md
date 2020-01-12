@@ -73,3 +73,62 @@ config.Load(configFile)
 // 初始化logger
 log.LoggerInit()
 ```
+#### 使用demo代码
+1、执行docs目录中的init.sql 对数据库和表初始化  
+2、启动项目  
+3、请求api地址  
+- 用户登录
+```text
+curl -H "Content-Type: application/json" -X POST  --data '{"username":"xmgtony","password":"123456"}' http://localhost:8080/login
+```
+响应结果
+```text
+{
+    "request_id": "ce7f7cd542194f4c",
+    "err_code": 0,
+    "message": "success",
+    "data": {
+        "expire": "2020-01-13 11:48:46",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Nzg4ODczMjYsImp3dC1rZXkiOnsiaWQiOjEsImNyZWF0ZWQiOiIyMDE5LTEyLTI0IDAwOjQ0OjQxIiwibW9kaWZpZWQiOiIyMDE5LTEyLTI0IDAwOjQ0OjQxIiwibmFtZSI6InhtZ3RvbnkiLCJiaXJ0aGRheSI6IjAwMDEtMDEtMDEgMDA6MDA6MDAifSwib3JpZ19pYXQiOjE1Nzg4MDA5MjZ9.dwBMPXyqBSF-THl7y5ikLOQyEyCVAs-2anEtRAAPB40"
+    }
+}
+```
+- 查询用户信息
+```text
+# 访问时带上一步返回的token信息
+curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Nzg4ODczMzcsImp3dC1rZXkiOnsiaWQiOjEsImNyZWF0ZWQiOiIyMDE5LTEyLTI0IDAwOjQ0OjQxIiwibW9kaWZpZWQiOiIyMDE5LTEyLTI0IDAwOjQ0OjQxIiwibmFtZSI6InhtZ3RvbnkiLCJiaXJ0aGRheSI6IjAwMDEtMDEtMDEgMDA6MDA6MDAifSwib3JpZ19pYXQiOjE1Nzg4MDA5Mzd9.PmdZyw2NOS0lVG4fNxsUSr2aHbMMhh8Wz7dohGKGStw" http://localhost:8080/v1/user/xmgtony
+```
+响应结果
+```text
+{
+	"request_id": "3c0fabdd3d2144cd",
+	"err_code": 0,
+	"message": "success",
+	"data": {
+		"id": 1,
+		"created": "2019-12-24 00:44:41",
+		"modified": "2019-12-24 00:44:41",
+		"name": "xmgtony",
+		"birthday": "0001-01-01 00:00:00"
+	}
+}
+```
+- 创建一个新用户
+```text
+curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Nzg4ODczMzcsImp3dC1rZXkiOnsiaWQiOjEsImNyZWF0ZWQiOiIyMDE5LTEyLTI0IDAwOjQ0OjQxIiwibW9kaWZpZWQiOiIyMDE5LTEyLTI0IDAwOjQ0OjQxIiwibmFtZSI6InhtZ3RvbnkiLCJiaXJ0aGRheSI6IjAwMDEtMDEtMDEgMDA6MDA6MDAifSwib3JpZ19pYXQiOjE1Nzg4MDA5Mzd9.PmdZyw2NOS0lVG4fNxsUSr2aHbMMhh8Wz7dohGKGStw" --data '{"name":"xmgtony","password":"123456","birthday" :"2019-08-07 08:09:01"}' http://localhost:8080/v1/user/create
+```
+响应结果
+```text
+#失败时
+{
+	"request_id": "808b1fa6397d4368",
+	"err_code": 40006,
+	"message": "用户已存在或者提交的信息错误"
+}
+#成功时
+{
+	"request_id": "50f60e68551440e3",
+	"err_code": 0,
+	"message": "success"
+}
+```
