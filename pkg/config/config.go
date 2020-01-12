@@ -94,9 +94,12 @@ func initConfig(cfg string) error {
 }
 
 // 监控配置文件变动
+// 注意：有些配置修改后，及时重新加载也要重新启动应用才行，比如端口
 func watchConfig() {
 	viper.WatchConfig()
 	viper.OnConfigChange(func(in fsnotify.Event) {
-		log.Printf("Config file changed: %s", in.Name)
+		log.Printf("Config file changed: %s, will reload it", in.Name)
+		// 忽略错误
+		_ = initConfig(in.Name)
 	})
 }
