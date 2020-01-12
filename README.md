@@ -4,7 +4,7 @@
 本项目依然是按照单体项目布局来做的，后面会完善多模块项目推荐的布局(比如一个项目既有app端server，又有管理后台server)，多项目多模块也是在单体项目上演变的，稍微做下改动而已。
 
 ### 下一步计划
-- 加入Makefile, Dockerfile, 版本管理，消息队列，微服务相关
+- 加入Dockerfile, 消息队列，微服务相关
 
 ### 目前整合组件及实现功能
 - 加入viper使用yml配置文件来配置项目信息，启动时可根据环境指定不同的配置文件
@@ -22,5 +22,6 @@ go run main.go -config test.yml
 - 项目全局错误码封装，使go在写业务代码时也能规范统一
 - 全局应用常量
 - 应用统一入口日志记录中间件实现，类似java中拦截器或者过滤器思想（感谢gin的设计），可以很方便的在入口处记录访问日志。
+- 添加makefile，可以使用make 命令进行编译，打包
 - 其他一些坑，代码中有注释
 ### 项目使用文档 [查看](https://github.com/xmgtony/apidemo-gin/blob/master/docs/README.md)
