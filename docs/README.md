@@ -43,7 +43,12 @@ git clone https://github.com/xmgtony/apidemo-gin
 
 make
 
-#然后会发现当前目录下多了一个target目录，里面存在编译好的可执行文件，和连配置文件一起打包好的压缩包。
+#然后会发现当前目录下多了一个target目录，里面存在编译好的可执行文件，和连配置文件一起打包好的压缩包
+直接运行可执行文件
+./apidemo-gin
+
+或者指定配置文件运行
+./apidemo-gin ./conf/config.yml
 ```
 也可以直接运行main.go, 或者使用go build main.go 编译运行。
 
