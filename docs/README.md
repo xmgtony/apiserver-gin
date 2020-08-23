@@ -78,6 +78,11 @@ config.Load(configFile)
 // 初始化logger
 log.LoggerInit()
 ```
+#### 查看应用支持的启动参数
+```go
+go run main.go -v
+```
+
 #### 使用demo代码
 1、执行docs目录中的init.sql 对数据库和表初始化  
 2、启动项目  
