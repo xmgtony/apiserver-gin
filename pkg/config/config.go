@@ -58,23 +58,17 @@ type LogCfg struct {
 }
 
 // Load is a loader to load config file.
-func Load(cfg string) {
+func Load(configFilePath string) {
+	resolveRealPath(configFilePath)
 	// 初始化配置文件
-	if err := initConfig(cfg); err != nil {
+	if err := initConfig(); err != nil {
 		panic(err)
 	}
 	// 监控配置文件，并热加载
 	watchConfig()
 }
 
-func initConfig(cfg string) error {
-	if cfg != "" {
-		viper.SetConfigFile(cfg)
-	} else {
-		// 设置默认的config
-		viper.AddConfigPath("conf")
-		viper.SetConfigName("config")
-	}
+func initConfig() error {
 	viper.SetConfigType("yaml")
 	viper.AutomaticEnv()
 	viper.SetEnvPrefix("APPLICATION")
@@ -100,6 +94,17 @@ func watchConfig() {
 	viper.OnConfigChange(func(in fsnotify.Event) {
 		log.Printf("Config file changed: %s, will reload it", in.Name)
 		// 忽略错误
-		_ = initConfig(in.Name)
+		Load(in.Name)
 	})
+}
+
+// 如果未传递配置文件路径将使用约定的环境配置文件
+func resolveRealPath(path string) {
+	if path != "" {
+		viper.SetConfigFile(path)
+	} else {
+		// 设置默认的config
+		viper.AddConfigPath("conf")
+		viper.SetConfigName("config")
+	}
 }

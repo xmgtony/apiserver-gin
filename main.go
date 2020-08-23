@@ -1,8 +1,6 @@
 package main
 
 import (
-	"apidemo-gin/model"
-	"apidemo-gin/pkg/cache"
 	"apidemo-gin/pkg/config"
 	"apidemo-gin/pkg/log"
 	"apidemo-gin/pkg/version"
@@ -15,30 +13,21 @@ import (
 	"time"
 )
 
-// Profile name, no suffix required, default "config"
-// For example, "config" stands for config.yml
-var configFile string
-
+// 启动入口
 func main() {
-	var printVersion bool
-	flag.StringVar(&configFile, "config", "", "config file name")
-	flag.BoolVar(&printVersion,
-		"v",
-		false,
-		"-v be used to print app version info",
-	)
-	flag.Parse()
-	if printVersion {
+	appOpt := &AppOptions{}
+	resolveAppOptions(appOpt)
+	if appOpt.PrintVersion {
 		version.PrintVersion()
 	}
-	// 加载配置文件
-	config.Load(configFile)
+	// 加载应用配置文件
+	config.Load(appOpt.ConfigFilePath)
 	// 初始化Redis Client
-	cache.RedisInit()
-	defer cache.RedisClose()
+	//cache.RedisInit()
+	//defer cache.RedisClose()
 	// 初始化数据库信息
-	model.DBInit()
-	defer model.DBClose()
+	//model.DBInit()
+	//defer model.DBClose()
 	// 初始化logger
 	log.LoggerInit()
 	// 便于在外部挂载middleware，添加到当前slice中即可
@@ -57,6 +46,32 @@ func main() {
 	}()
 	// Start on the specified port
 	log.Log.Info(g.Run(config.Cfg.Port).Error())
+}
+
+// AppOptions 用来接收应用启动时指定的参数
+type AppOptions struct {
+	// 打印版本
+	PrintVersion bool
+	// 使用的配置文件路径
+	ConfigFilePath string
+}
+
+// resolveAppOptions 解析启动参数
+func resolveAppOptions(opt *AppOptions) {
+	var printVersion bool
+	var configFilePath string
+	flag.BoolVar(&printVersion,
+		"v",
+		false,
+		"-v 选项用于控制是否打印当前项目的版本",
+	)
+	flag.StringVar(&configFilePath,
+		"c", "",
+		"-c 选项用于指定要使用的配置文件")
+	flag.Parse()
+
+	opt.PrintVersion = printVersion
+	opt.ConfigFilePath = configFilePath
 }
 
 // PingServer is be used to check server status
