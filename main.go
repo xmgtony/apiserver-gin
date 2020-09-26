@@ -1,6 +1,7 @@
 package main
 
 import (
+	"apidemo-gin/model"
 	"apidemo-gin/pkg/config"
 	"apidemo-gin/pkg/log"
 	"apidemo-gin/pkg/version"
@@ -26,8 +27,8 @@ func main() {
 	//cache.RedisInit()
 	//defer cache.RedisClose()
 	// 初始化数据库信息
-	//model.DBInit()
-	//defer model.DBClose()
+	model.DBInit()
+	defer model.DBClose()
 	// 初始化logger
 	log.LoggerInit()
 	// 便于在外部挂载middleware，添加到当前slice中即可

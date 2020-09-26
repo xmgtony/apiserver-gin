@@ -3,8 +3,9 @@ package model
 import (
 	"apidemo-gin/pkg/config"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/jinzhu/gorm"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"time"
 )
 
 // DataBase 用来组织数据库信息，实际使用中可能会有Master和Slave主从库
@@ -28,18 +29,21 @@ func openDB(user, password, host, port, dbname string) *gorm.DB {
 		host,
 		port,
 		dbname)
-	db, err := gorm.Open("mysql", dsn)
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		PrepareStmt: true, // 缓存每一条sql语句，提高执行速度
+	})
 	if err != nil {
 		panic(err)
 	}
-	// 设置日志格式和连接池大小
-	db.LogMode(config.Cfg.Database.LogMode)
-	db.DB().SetMaxOpenConns(config.Cfg.Database.MaximumPoolSize)
-	db.DB().SetMaxIdleConns(config.Cfg.Database.MaximumIdleSize)
-
+	sqlDb, _ := db.DB()
+	sqlDb.SetConnMaxLifetime(time.Hour)
+	// 设置连接池大小
+	sqlDb.SetMaxOpenConns(config.Cfg.Database.MaximumPoolSize)
+	sqlDb.SetMaxIdleConns(config.Cfg.Database.MaximumIdleSize)
 	return db
 }
 
 func DBClose() {
-	_ = DB.Master.Close()
+	sqlDb, _ := DB.Master.DB()
+	_ = sqlDb.Close()
 }

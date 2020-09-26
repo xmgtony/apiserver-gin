@@ -13,7 +13,6 @@ database:
   password: 123456 #密码
   maximum-pool-size: 300  #连接池最大连接数
   maximum-idle-size: 20  #连接池最大空闲数
-  log-mode: true # 输出日志
 # 缓存redis配置
 redis:
   address: localhost:6379 #redis server地址
