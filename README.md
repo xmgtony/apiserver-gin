@@ -25,4 +25,4 @@ go run main.go -config test.yml
 - 添加makefile，可以使用make 命令进行编译，打包
 - 完善了项目版本管理，使用make命令编译后的项目可以方便跟踪线上发布版本
 - 其他一些坑，代码中有注释
-### 项目使用文档 [查看](https://github.com/xmgtony/apidemo-gin/blob/master/docs/README.md)
+### 项目使用文档 [查看](https://github.com/xmgtony/apiserver-gin/blob/master/docs/README.md)
