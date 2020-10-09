@@ -1,5 +1,5 @@
-### apidemo-gin
-基于gin的api构键脚手架，整个项目参考了生产项目的布局架构，也参考了[golang项目标准布局](https://github.com/golang-standards/project-layout)，还有学习golang过程中见过的比较好的项目结构。
+### apiserver-gin
+基于gin的api构键脚手架，项目从实际生产出发，也参考了[golang项目标准布局](https://github.com/golang-standards/project-layout)，还有学习golang过程中见过的比较好的项目结构。
 整个项目拉下来，不用做太多改造，就可以实际使用在生产中，特别对于新手学习搭建项目，熟悉项目规划，了解生产项目结构和细节设计感觉会有很大帮助。
 本项目依然是按照单体项目布局来做的，后面会完善多模块项目推荐的布局(比如一个项目既有app端server，又有管理后台server)，多项目多模块也是在单体项目上演变的，稍微做下改动而已。
 
