@@ -28,6 +28,7 @@ target:
 package: build
 	@# 使用tar命令对${word_dir下面的文件打包}
 	cp -r conf  ${work_dir}/
+	cp ./startup.sh ${work_dir}/
 	cd ${work_dir}/ && tar -zcvf ${app_name}.tar.gz *
 
 .PHONY: version clean build package all
