@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"apidemo-gin/pkg/constant"
-	"apidemo-gin/tools"
+	"apiserver-gin/pkg/constant"
+	"apiserver-gin/tools"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"

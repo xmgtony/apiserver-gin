@@ -1,11 +1,11 @@
 package main
 
 import (
-	"apidemo-gin/model"
-	"apidemo-gin/pkg/config"
-	"apidemo-gin/pkg/log"
-	"apidemo-gin/pkg/version"
-	"apidemo-gin/router"
+	"apiserver-gin/model"
+	"apiserver-gin/pkg/config"
+	"apiserver-gin/pkg/log"
+	"apiserver-gin/pkg/version"
+	"apiserver-gin/router"
 	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"

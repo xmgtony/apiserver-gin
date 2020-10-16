@@ -1,9 +1,9 @@
 package v1
 
 import (
-	"apidemo-gin/model/user"
-	"apidemo-gin/pkg/errcode"
-	"apidemo-gin/tools/security"
+	"apiserver-gin/model/user"
+	"apiserver-gin/pkg/errcode"
+	"apiserver-gin/tools/security"
 )
 
 func Create(user *user.User) error {

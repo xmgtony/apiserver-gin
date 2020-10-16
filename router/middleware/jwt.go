@@ -1,13 +1,13 @@
 package middleware
 
 import (
-	usermodel "apidemo-gin/model/user"
-	"apidemo-gin/pkg/config"
-	"apidemo-gin/pkg/errcode"
-	. "apidemo-gin/pkg/log"
-	"apidemo-gin/pkg/response"
-	time2 "apidemo-gin/pkg/time"
-	"apidemo-gin/tools/security"
+	usermodel "apiserver-gin/model/user"
+	"apiserver-gin/pkg/config"
+	"apiserver-gin/pkg/errcode"
+	. "apiserver-gin/pkg/log"
+	"apiserver-gin/pkg/response"
+	time2 "apiserver-gin/pkg/time"
+	"apiserver-gin/tools/security"
 	"github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

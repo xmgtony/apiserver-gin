@@ -35,7 +35,7 @@ mysql(可选)，redis(可选)，go(1.12及以上版本)
 ```text
 # 1、clone 源码
 
-git clone https://github.com/xmgtony/apidemo-gin
+git clone https://github.com/xmgtony/apiserver-gin
 
 # 2、打开conf目录里面的配置文件，修改mysql和redis配置
 
@@ -45,10 +45,10 @@ make
 
 #然后会发现当前目录下多了一个target目录，里面存在编译好的可执行文件，和连配置文件一起打包好的压缩包
 直接运行可执行文件
-./apidemo-gin
+./apiserver-gin
 
 或者指定配置文件运行
-./apidemo-gin ./conf/config.yml
+./apiserver-gin ./conf/config.yml
 ```
 也可以直接运行main.go, 或者使用go build main.go 编译运行。
 

@@ -2,9 +2,9 @@
 package router
 
 import (
-	"apidemo-gin/handler/check"
-	userv1 "apidemo-gin/handler/user/v1"
-	"apidemo-gin/router/middleware"
+	"apiserver-gin/handler/check"
+	userv1 "apiserver-gin/handler/user/v1"
+	"apiserver-gin/router/middleware"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

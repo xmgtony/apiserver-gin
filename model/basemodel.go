@@ -1,7 +1,7 @@
 package model
 
 import (
-	"apidemo-gin/pkg/time"
+	"apiserver-gin/pkg/time"
 )
 
 // BaseModel 用于表示model公共的部分（对应数据库公共的字段）

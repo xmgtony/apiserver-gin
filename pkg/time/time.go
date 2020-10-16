@@ -1,7 +1,7 @@
 package time
 
 import (
-	"apidemo-gin/pkg/constant"
+	"apiserver-gin/pkg/constant"
 	"database/sql/driver"
 	"fmt"
 	"time"

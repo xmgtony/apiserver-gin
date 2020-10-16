@@ -1,7 +1,7 @@
 package model
 
 import (
-	"apidemo-gin/pkg/config"
+	"apiserver-gin/pkg/config"
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

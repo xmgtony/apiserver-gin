@@ -1,8 +1,8 @@
 package log
 
 import (
-	"apidemo-gin/pkg/config"
-	"apidemo-gin/pkg/constant"
+	"apiserver-gin/pkg/config"
+	"apiserver-gin/pkg/constant"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"

@@ -1,4 +1,4 @@
-module apidemo-gin
+module apiserver-gin
 
 go 1.13
 

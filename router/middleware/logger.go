@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"apidemo-gin/pkg/constant"
-	. "apidemo-gin/pkg/log"
+	"apiserver-gin/pkg/constant"
+	. "apiserver-gin/pkg/log"
 	"bytes"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

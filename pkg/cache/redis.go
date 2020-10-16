@@ -1,7 +1,7 @@
 package cache
 
 import (
-	"apidemo-gin/pkg/config"
+	"apiserver-gin/pkg/config"
 	"github.com/go-redis/redis/v7"
 	"log"
 	"time"
