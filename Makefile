@@ -14,7 +14,7 @@ build: target
 	-X ${version_package}.BranchName=${branch_name} \
 	-X ${version_package}.BuildTime=${build_time} \
 	-X ${version_package}.AppVersion=${app_version}" -v \
-	-o ${work_dir}/${app_name} .
+	-o ${work_dir}/${app_name} ./cmd
 # show go version
 version:
 	@$(goversion)
