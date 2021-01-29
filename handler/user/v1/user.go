@@ -1,11 +1,11 @@
 package v1
 
 import (
-	usermodel "apiserver-gin/model/user"
+	usermodel "apiserver-gin/internal/model/user"
+	userservicev1 "apiserver-gin/internal/service/user/v1"
 	"apiserver-gin/pkg/errcode"
 	"apiserver-gin/pkg/response"
 	"apiserver-gin/pkg/time"
-	userservicev1 "apiserver-gin/service/user/v1"
 	"github.com/gin-gonic/gin"
 )
 

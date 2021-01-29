@@ -1,7 +1,7 @@
 package main
 
 import (
-	"apiserver-gin/model"
+	"apiserver-gin/internal/model"
 	"apiserver-gin/pkg/config"
 	"apiserver-gin/pkg/log"
 	"apiserver-gin/pkg/version"

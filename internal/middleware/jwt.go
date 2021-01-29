@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	usermodel "apiserver-gin/model/user"
+	usermodel "apiserver-gin/internal/model/user"
 	"apiserver-gin/pkg/config"
 	"apiserver-gin/pkg/errcode"
 	. "apiserver-gin/pkg/log"

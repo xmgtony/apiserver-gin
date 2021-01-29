@@ -1,7 +1,7 @@
 package user
 
 import (
-	"apiserver-gin/model"
+	"apiserver-gin/internal/model"
 	"apiserver-gin/pkg/time"
 	"errors"
 	validator "gopkg.in/go-playground/validator.v9"

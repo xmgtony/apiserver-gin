@@ -4,7 +4,7 @@ package router
 import (
 	"apiserver-gin/handler/check"
 	userv1 "apiserver-gin/handler/user/v1"
-	"apiserver-gin/router/middleware"
+	"apiserver-gin/internal/middleware"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

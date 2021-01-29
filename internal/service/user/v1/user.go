@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"apiserver-gin/model/user"
+	"apiserver-gin/internal/model/user"
 	"apiserver-gin/pkg/errcode"
 	"apiserver-gin/tools/security"
 )
