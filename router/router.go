@@ -2,8 +2,8 @@
 package router
 
 import (
-	"apiserver-gin/handler/check"
-	userv1 "apiserver-gin/handler/user/v1"
+	"apiserver-gin/internal/handler/check"
+	userv1 "apiserver-gin/internal/handler/user/v1"
 	"apiserver-gin/internal/middleware"
 	"github.com/gin-gonic/gin"
 	"net/http"
