@@ -15,7 +15,7 @@ go run main.go -c test.yml
 - 集成gorm 并自定义JsonTime 解决Json序列化和反序列化只支持UTC时间的问题（可以自定义时间格式）  
 提供了部分demo，可以按照demo在项目中直接使用。
 - 整合redis，开箱即用，直接通过yml文件对redis进行配置
-- 整合zap，lumerjack 完善日志输出，日志分割，部分参数可配置。
+- 整合zap，lumerjack 完善日志输出，日志分割，部分参数可配置
 - 集成jwt，提供demo代码，自定义授权失败成功等的响应格式，跟全局api响应格式统一
 - 实现session管理
 - 实现部分工具类的封装，md5, bcrypt和uuid生成
