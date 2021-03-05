@@ -7,35 +7,28 @@ import (
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"os"
+	"sync"
 	"time"
 )
 
-var Log *zap.Logger
+var logger *zap.SugaredLogger
+var once sync.Once
 
-func LoggerInit() {
-	Log = zap.New(newCore(),
-		zap.AddCaller(),
-		zap.Fields(zap.String("appName", config.Cfg.ApplicationName)))
+func LoggerInit(config config.Config) {
+	once.Do(func() {
+		lumber := newLumber(config)
+		writeSyncer := zapcore.NewMultiWriteSyncer(zapcore.AddSync(lumber))
+		logger = zap.New(newCore(writeSyncer),
+			zap.ErrorOutput(writeSyncer),
+			zap.AddCaller(),
+			zap.AddCallerSkip(1),
+			zap.Fields(zap.String("appName", config.ApplicationName))).
+			Sugar()
+	})
 }
 
-func New() *zap.Logger {
-	if Log == nil {
-		LoggerInit()
-	}
-	return Log
-}
-
-func newCore() zapcore.Core {
-	// rolling log
-	lumber := &lumberjack.Logger{
-		Filename:   config.Cfg.LogCfg.FileName,
-		MaxSize:    config.Cfg.LogCfg.MaxSize,
-		MaxAge:     config.Cfg.LogCfg.MaxAge,
-		MaxBackups: config.Cfg.LogCfg.MaxBackups,
-		LocalTime:  config.Cfg.LogCfg.LocalTime,
-		Compress:   config.Cfg.LogCfg.Compress,
-	}
-	// log level
+func newCore(ws zapcore.WriteSyncer) zapcore.Core {
+	// 默认日志级别
 	atomicLevel := zap.NewAtomicLevel()
 	defaultLevel := zapcore.DebugLevel
 	// 会解码传递的日志级别，生成新的日志级别
@@ -62,7 +55,7 @@ func newCore() zapcore.Core {
 	} else {
 		// 输出到文件时，不使用彩色日志，否则会出现乱码
 		encoder.EncodeLevel = zapcore.CapitalLevelEncoder
-		writeSyncer = zapcore.NewMultiWriteSyncer(zapcore.AddSync(lumber))
+		writeSyncer = ws
 	}
 	// Tips: 如果使用zapcore.NewJSONEncoder
 	// encoderConfig里面就不要配置 EncodeLevel 为zapcore.CapitalColorLevelEncoder或者是
@@ -73,11 +66,77 @@ func newCore() zapcore.Core {
 		atomicLevel)
 }
 
-// CustomTimeEncoder  implemented zapcore.TimeEncoder
+// CustomTimeEncoder 实现了 zapcore.TimeEncoder
+// 实现对日期格式的自定义转换
 func CustomTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	timeLayout := config.Cfg.LogCfg.TimeFormat
 	if len(timeLayout) <= 0 {
 		timeLayout = constant.TimeLayoutMs
 	}
 	enc.AppendString(t.Format(timeLayout))
+}
+
+func newLumber(config config.Config) *lumberjack.Logger {
+	return &lumberjack.Logger{
+		Filename:   config.LogCfg.FileName,
+		MaxSize:    config.LogCfg.MaxSize,
+		MaxAge:     config.LogCfg.MaxAge,
+		MaxBackups: config.LogCfg.MaxBackups,
+		LocalTime:  config.LogCfg.LocalTime,
+		Compress:   config.LogCfg.Compress,
+	}
+}
+
+// KVPair 表示接收打印的键值对参数
+type KVPair struct {
+	k string
+	v interface{}
+}
+
+func spread(kvs ...KVPair) []interface{} {
+	s := make([]interface{}, 0, len(kvs))
+	for _, v := range kvs {
+		s = append(s, v.k, v.v)
+	}
+	return s
+}
+
+// Debug 打印debug级别信息
+func Debug(message string, kvs ...KVPair) {
+	args := spread(kvs...)
+	logger.Debugw(message, args)
+}
+
+// Info 打印info级别信息
+func Info(message string, kvs ...KVPair) {
+	args := spread(kvs...)
+	logger.Infow(message, args...)
+}
+
+// Warn 打印warn级别信息
+func Warn(message string, kvs ...KVPair) {
+	args := spread(kvs...)
+	logger.Warnw(message, args)
+}
+
+// Error 打印error级别信息
+func Error(message string, kvs ...KVPair) {
+	args := spread(kvs...)
+	logger.Errorw(message, args)
+}
+
+// Panic 打印错误信息，然后panic
+func Panic(message string, kvs ...KVPair) {
+	args := spread(kvs...)
+	logger.Panicw(message, args)
+}
+
+// Fatal 打印错误信息，然后退出
+func Fatal(message string, kvs ...KVPair) {
+	args := spread(kvs...)
+	logger.Fatalw(message, args)
+}
+
+func Sync() {
+	_ = logger.Sync()
 }
