@@ -4,15 +4,16 @@ import (
 	usermodel "apiserver-gin/internal/model/user"
 	"apiserver-gin/pkg/config"
 	"apiserver-gin/pkg/errcode"
-	. "apiserver-gin/pkg/log"
+	"apiserver-gin/pkg/log"
+
 	"apiserver-gin/pkg/response"
 	time2 "apiserver-gin/pkg/time"
 	"apiserver-gin/tools/security"
-	"github.com/appleboy/gin-jwt/v2"
-	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 	"strings"
 	"time"
+
+	jwt "github.com/appleboy/gin-jwt/v2"
+	"github.com/gin-gonic/gin"
 )
 
 var identityKey string = "jwt-key"
@@ -41,7 +42,7 @@ func Jwt() *jwt.GinJWTMiddleware {
 		DisabledAbort:         false,
 	})
 	if err != nil {
-		Log.Fatal("Jwt create error", zap.String("error", err.Error()))
+		log.Error("Jwt create error", log.KVPair{K: "error", V: err.Error()})
 	}
 	return jwtMiddleware
 }

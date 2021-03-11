@@ -1,4 +1,4 @@
-package model
+package db
 
 import (
 	"apiserver-gin/pkg/config"
@@ -15,14 +15,21 @@ type DataBase struct {
 
 var DB *DataBase
 
-func DBInit() {
-	cfg := config.Cfg.Database
+func DataBaseInit(config config.Config) {
+	dbConfig := config.Database
 	DB = &DataBase{
-		Master: openDB(cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.Dbname),
+		Master: openDB(
+			dbConfig.Username,
+			dbConfig.Password,
+			dbConfig.Host,
+			dbConfig.Port,
+			dbConfig.Dbname,
+			dbConfig.MaximumPoolSize,
+			dbConfig.MaximumIdleSize),
 	}
 }
 
-func openDB(user, password, host, port, dbname string) *gorm.DB {
+func openDB(user, password, host, port, dbname string, maxPoolSize, maxIdle int) *gorm.DB {
 	dsn := fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		user,
 		password,
@@ -38,8 +45,8 @@ func openDB(user, password, host, port, dbname string) *gorm.DB {
 	sqlDb, _ := db.DB()
 	sqlDb.SetConnMaxLifetime(time.Hour)
 	// 设置连接池大小
-	sqlDb.SetMaxOpenConns(config.Cfg.Database.MaximumPoolSize)
-	sqlDb.SetMaxIdleConns(config.Cfg.Database.MaximumIdleSize)
+	sqlDb.SetMaxOpenConns(maxPoolSize)
+	sqlDb.SetMaxIdleConns(maxIdle)
 	return db
 }
 

@@ -3,17 +3,19 @@ package log
 import (
 	"apiserver-gin/pkg/config"
 	"apiserver-gin/pkg/constant"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
-	"gopkg.in/natefinch/lumberjack.v2"
 	"os"
 	"sync"
 	"time"
+
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 var logger *zap.SugaredLogger
 var once sync.Once
 
+// LoggerInit 初始化日志
 func LoggerInit(config config.Config) {
 	once.Do(func() {
 		lumber := newLumber(config)
@@ -89,14 +91,14 @@ func newLumber(config config.Config) *lumberjack.Logger {
 
 // KVPair 表示接收打印的键值对参数
 type KVPair struct {
-	k string
-	v interface{}
+	K string
+	V interface{}
 }
 
 func spread(kvs ...KVPair) []interface{} {
 	s := make([]interface{}, 0, len(kvs))
 	for _, v := range kvs {
-		s = append(s, v.k, v.v)
+		s = append(s, v.K, v.V)
 	}
 	return s
 }
@@ -137,6 +139,37 @@ func Fatal(message string, kvs ...KVPair) {
 	logger.Fatalw(message, args)
 }
 
+// Debugf 格式化输出debug级别日志
+func Debugf(template string, agrs ...interface{}) {
+	logger.Debugf(template, agrs)
+}
+
+// Infof 格式化输出info级别日志
+func Infof(template string, agrs ...interface{}) {
+	logger.Infof(template, agrs)
+}
+
+// Warnf 格式化输出warn级别日志
+func Warnf(template string, agrs ...interface{}) {
+	logger.Warnf(template, agrs)
+}
+
+// Errorf 格式化输出error级别日志
+func Errorf(template string, agrs ...interface{}) {
+	logger.Errorf(template, agrs)
+}
+
+// Panicf 格式化输出日志，并panic
+func Panicf(template string, agrs ...interface{}) {
+	logger.Panicf(template, agrs)
+}
+
+// Fatalf 格式化输出日志，并退出
+func Fatalf(template string, agrs ...interface{}) {
+	logger.Fatalf(template, agrs)
+}
+
+// Sync 关闭时需要同步日志到输出
 func Sync() {
 	_ = logger.Sync()
 }

@@ -2,16 +2,16 @@ package cache
 
 import (
 	"apiserver-gin/pkg/config"
-	"github.com/go-redis/redis/v7"
-	"log"
+	"context"
+	"github.com/go-redis/redis/v8"
 	"time"
 )
 
 var redisClient *redis.Client
 
 // 初始化redisClient
-func RedisInit() {
-	redisCfg := config.Cfg.RedisCfg
+func RedisInit(config config.Config) {
+	redisCfg := config.RedisCfg
 	redisClient = redis.NewClient(&redis.Options{
 		DB:           redisCfg.Db,
 		Addr:         redisCfg.Addr,
@@ -20,11 +20,10 @@ func RedisInit() {
 		MinIdleConns: redisCfg.MinIdleConns,
 		IdleTimeout:  time.Duration(redisCfg.IdleTimeout) * time.Second,
 	})
-	_, err := redisClient.Ping().Result()
+	_, err := redisClient.Ping(context.TODO()).Result()
 	if err != nil {
-		log.Fatal("redis initialization failed: ", err)
+		panic(err)
 	}
-	log.Println("redis was initialized successfully")
 }
 
 func GetRedisClient() *redis.Client {
