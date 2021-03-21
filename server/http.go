@@ -6,7 +6,6 @@
 package server
 
 import (
-	"apiserver-gin/internal/db"
 	"apiserver-gin/pkg/config"
 	"apiserver-gin/pkg/log"
 	"flag"
@@ -64,14 +63,6 @@ func (s Server) Run(rls ...RouterLoad) {
 	gin.SetMode(s.config.Mode)
 	g := gin.New()
 	s.routerLoad(g, rls...)
-
-	// 初始化日志
-	log.LoggerInit(s.config)
-	defer log.Sync()
-
-	// 初始化数据库链接
-	db.DataBaseInit(s.config)
-	defer db.DBClose()
 
 	// health check
 	go func() {

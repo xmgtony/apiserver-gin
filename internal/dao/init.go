@@ -1,4 +1,4 @@
-package db
+package dao
 
 import (
 	"apiserver-gin/pkg/config"
@@ -8,24 +8,23 @@ import (
 	"time"
 )
 
-// DataBase 用来组织数据库信息，实际使用中可能会有Master和Slave主从库
-type DataBase struct {
-	Master *gorm.DB
+// Dao 数据访问对象
+type Dao struct {
+	db *gorm.DB
+	c  config.DataBaseConfig
 }
 
-var DB *DataBase
-
-func DataBaseInit(config config.Config) {
-	dbConfig := config.Database
-	DB = &DataBase{
-		Master: openDB(
-			dbConfig.Username,
-			dbConfig.Password,
-			dbConfig.Host,
-			dbConfig.Port,
-			dbConfig.Dbname,
-			dbConfig.MaximumPoolSize,
-			dbConfig.MaximumIdleSize),
+func New(c config.DataBaseConfig) *Dao {
+	return &Dao{
+		db: openDB(
+			c.Username,
+			c.Password,
+			c.Host,
+			c.Port,
+			c.Dbname,
+			c.MaximumPoolSize,
+			c.MaximumIdleSize),
+		c: c,
 	}
 }
 
@@ -50,7 +49,7 @@ func openDB(user, password, host, port, dbname string, maxPoolSize, maxIdle int)
 	return db
 }
 
-func DBClose() {
-	sqlDb, _ := DB.Master.DB()
-	_ = sqlDb.Close()
+func (d *Dao) Close() {
+	db, _ := d.db.DB()
+	_ = db.Close()
 }

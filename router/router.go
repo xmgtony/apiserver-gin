@@ -1,7 +1,7 @@
 package router
 
 import (
-	"apiserver-gin/internal/handler/check"
+	"apiserver-gin/internal/handler/ping"
 	"apiserver-gin/internal/middleware"
 	"net/http"
 
@@ -13,23 +13,20 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	// 注册中间件
 	g.Use(gin.Logger())
 	g.Use(gin.Recovery())
-	g.Use(middleware.NoCache)
-	g.Use(middleware.Options)
-	g.Use(middleware.Secure)
-	g.Use(middleware.RequestId)
+	g.Use(middleware.NoCache())
+	g.Use(middleware.Options())
+	g.Use(middleware.Secure())
+	g.Use(middleware.RequestId())
 	g.Use(middleware.Logger)
 	g.Use(mw...)
 
 	// 404
 	g.NoRoute(func(c *gin.Context) {
-		c.String(http.StatusNotFound, "handler not found!")
+		c.JSON(http.StatusNotFound, "404 not found!")
 	})
 
-	// health check
-	checkGroup := g.Group("/check", check.LocalIPCheck)
-	{
-		checkGroup.GET("/health", check.HealthCheck)
-	}
+	// ping server
+	g.GET("/ping", ping.Ping())
 
 	// ---- user login use jwt ---
 	ginJWTMiddleware := middleware.Jwt()
