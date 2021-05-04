@@ -18,11 +18,11 @@ import (
 
 //Server 代表当前服务端实例
 type Server struct {
-	config config.Config
+	config *config.Config
 }
 
 // NewServer 创建server实例
-func NewServer(config config.Config) *Server {
+func NewServer(config *config.Config) *Server {
 	return &Server{
 		config: config,
 	}
@@ -55,9 +55,8 @@ func ResolveAppOptions(opt *AppOptions) {
 	opt.ConfigFilePath = configFilePath
 }
 
-//Run server的启动入口
-// 1. 加载路由
-// 2. 初始化资源
+// Run server的启动入口
+// 加载路由, 启动服务
 func (s Server) Run(rls ...RouterLoad) {
 	// 设置gin启动模式，必须在创建gin实例之前
 	gin.SetMode(s.config.Mode)

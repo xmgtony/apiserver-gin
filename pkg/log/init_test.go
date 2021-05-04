@@ -13,7 +13,7 @@ import (
 func init() {
 	defer Sync()
 	c := config.Config{
-		LogCfg: config.LogCfg{
+		LogConfig: config.LogConfig{
 			Level:      "debug",
 			FileName:   "test.log",
 			TimeFormat: constant.TimeLayout,
@@ -26,7 +26,7 @@ func init() {
 		},
 		ApplicationName: "zapTest",
 	}
-	LoggerInit(c)
+	LoggerInit(&c)
 }
 
 func TestInfo(t *testing.T) {

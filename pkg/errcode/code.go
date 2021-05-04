@@ -46,6 +46,12 @@ var (
 		Message: "用户已存在或者提交的信息错误",
 	}
 
+	// 用户token错误
+	AuthTokenErr = &Code{
+		ErrCode: 40007,
+		Message: "用户token不合法",
+	}
+
 	// 系统错误（按需求细化）
 	SystemErr = &Code{
 		ErrCode: 50000,

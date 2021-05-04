@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-var GlobalConfig Config
+var GlobalConfig *Config
 
 // Config is application global config
 type Config struct {
@@ -58,7 +58,7 @@ type LogConfig struct {
 }
 
 // Load is a loader to load config file.
-func Load(configFilePath string) {
+func Load(configFilePath string) *Config {
 	resolveRealPath(configFilePath)
 	// 初始化配置文件
 	if err := initConfig(); err != nil {
@@ -66,6 +66,8 @@ func Load(configFilePath string) {
 	}
 	// 监控配置文件，并热加载
 	watchConfig()
+
+	return GlobalConfig
 }
 
 func initConfig() error {
@@ -80,7 +82,8 @@ func initConfig() error {
 		panic(err)
 	}
 	// 解析到struct
-	if err := viper.Unmarshal(&GlobalConfig); err != nil {
+	GlobalConfig = &Config{}
+	if err := viper.Unmarshal(GlobalConfig); err != nil {
 		panic(err)
 	}
 	log.Println("application config load completed!")

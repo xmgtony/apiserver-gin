@@ -1,7 +1,9 @@
 package router
 
 import (
+	"apiserver-gin/internal/handler"
 	"apiserver-gin/internal/handler/ping"
+	v1 "apiserver-gin/internal/handler/v1"
 	"apiserver-gin/internal/middleware"
 	"net/http"
 
@@ -9,7 +11,7 @@ import (
 )
 
 // Load 加载中间件和路由信息
-func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
+func Load(g *gin.Engine) {
 	// 注册中间件
 	g.Use(gin.Logger())
 	g.Use(gin.Recovery())
@@ -18,8 +20,6 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	g.Use(middleware.Secure())
 	g.Use(middleware.RequestId())
 	g.Use(middleware.Logger)
-	g.Use(mw...)
-
 	// 404
 	g.NoRoute(func(c *gin.Context) {
 		c.JSON(http.StatusNotFound, "404 not found!")
@@ -27,13 +27,9 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 
 	// ping server
 	g.GET("/ping", ping.Ping())
-
-	// ---- user login use jwt ---
-	ginJWTMiddleware := middleware.Jwt()
-	g.POST("/login", ginJWTMiddleware.LoginHandler)
-
-	// User route
-	auth := g.Group("/auth")
-	auth.GET("/refresh_token", ginJWTMiddleware.RefreshHandler)
-	return g
+	// user group
+	ug := g.Group("/v1/user", middleware.AuthToken())
+	ug.GET("", v1.GetUserInfo())
+	// login
+	g.POST("/login", handler.Login())
 }

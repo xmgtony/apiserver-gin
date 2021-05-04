@@ -1,4 +1,9 @@
-package dao
+// Created on 2021/5/4.
+// @author tony
+// email xmgtony@gmail.com
+// description 配置mysql链接
+
+package db
 
 import (
 	"apiserver-gin/pkg/config"
@@ -10,13 +15,12 @@ import (
 
 // Dao 数据访问对象
 type Dao struct {
-	db *gorm.DB
-	c  config.DataBaseConfig
+	*gorm.DB
 }
 
 func New(c config.DataBaseConfig) *Dao {
 	return &Dao{
-		db: openDB(
+		openDB(
 			c.Username,
 			c.Password,
 			c.Host,
@@ -24,7 +28,6 @@ func New(c config.DataBaseConfig) *Dao {
 			c.Dbname,
 			c.MaximumPoolSize,
 			c.MaximumIdleSize),
-		c: c,
 	}
 }
 
@@ -41,7 +44,10 @@ func openDB(user, password, host, port, dbname string, maxPoolSize, maxIdle int)
 	if err != nil {
 		panic(err)
 	}
-	sqlDb, _ := db.DB()
+	sqlDb, err := db.DB()
+	if err != nil {
+		panic(err)
+	}
 	sqlDb.SetConnMaxLifetime(time.Hour)
 	// 设置连接池大小
 	sqlDb.SetMaxOpenConns(maxPoolSize)
@@ -50,6 +56,6 @@ func openDB(user, password, host, port, dbname string, maxPoolSize, maxIdle int)
 }
 
 func (d *Dao) Close() {
-	db, _ := d.db.DB()
+	db, _ := d.DB.DB()
 	_ = db.Close()
 }

@@ -5,4 +5,14 @@
 
 package handler
 
-var iName = 1
+import (
+	v1 "apiserver-gin/internal/handler/v1"
+	"apiserver-gin/internal/service"
+)
+
+var s *service.Service
+
+func InitHandler(service *service.Service) {
+	s = service
+	v1.InitV1Handler(s)
+}

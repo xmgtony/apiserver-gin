@@ -10,8 +10,8 @@ import (
 var redisClient *redis.Client
 
 // 初始化redisClient
-func RedisInit(config config.Config) {
-	redisCfg := config.RedisCfg
+func InitRedis(config config.Config) {
+	redisCfg := config.RedisConfig
 	redisClient = redis.NewClient(&redis.Options{
 		DB:           redisCfg.Db,
 		Addr:         redisCfg.Addr,
@@ -30,6 +30,6 @@ func GetRedisClient() *redis.Client {
 	return redisClient
 }
 
-func RedisClose() {
+func CloseRedis() {
 	_ = redisClient.Close()
 }
