@@ -3,9 +3,9 @@
 package memory
 
 import (
+	"apiserver-gin/pkg/session"
 	"container/list"
 	"errors"
-	"qifoon.com/hemei/pkg/session"
 	"time"
 )
 

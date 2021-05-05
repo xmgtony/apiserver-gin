@@ -7,23 +7,23 @@ import (
 	"strings"
 )
 
-var Cfg Config
+var GlobalConfig *Config
 
 // Config is application global config
 type Config struct {
-	Mode            string      `mapstructure:"mode"`           // gin启动模式
-	Port            string      `mapstructure:"port"`           // 启动端口
-	ApplicationName string      `mapstructure:"name"`           //应用名称
-	Url             string      `mapstructure:"url"`            // 应用地址,用于自检 eg. http://127.0.01
-	MaxPingCount    int         `mapstructure:"max_ping_count"` // 最大自检次数，用户健康检查
-	JwtSecret       string      `mapstructure:"jwt-secret"`
-	Database        DataBaseCfg `mapstructure:"database"` // 数据库信息
-	RedisCfg        RedisCfg    `mapstructure:"redis"`    // redis
-	LogCfg          LogCfg      `mapstructure:"log"`      // uber zap
+	Mode            string         `mapstructure:"mode"`           // gin启动模式
+	Port            string         `mapstructure:"port"`           // 启动端口
+	ApplicationName string         `mapstructure:"name"`           //应用名称
+	Url             string         `mapstructure:"url"`            // 应用地址,用于自检 eg. http://127.0.01
+	MaxPingCount    int            `mapstructure:"max_ping_count"` // 最大自检次数，用户健康检查
+	JwtSecret       string         `mapstructure:"jwt-secret"`
+	DbConfig        DataBaseConfig `mapstructure:"database"` // 数据库信息
+	RedisConfig     RedisConfig    `mapstructure:"redis"`    // redis
+	LogConfig       LogConfig      `mapstructure:"log"`      // uber zap
 }
 
-// DataBaseCfg is used to configure mysql database
-type DataBaseCfg struct {
+// DataBaseConfig is used to configure mysql database
+type DataBaseConfig struct {
 	Dbname          string `mapstructure:"dbname"`
 	Host            string `mapstructure:"host"`
 	Port            string `mapstructure:"port"`
@@ -34,8 +34,8 @@ type DataBaseCfg struct {
 	LogMode         bool   `mapstructure:"log-mode"`
 }
 
-// RedisCfg is used to configure redis
-type RedisCfg struct {
+// RedisConfig is used to configure redis
+type RedisConfig struct {
 	Addr         string `mapstructure:"address"`
 	Password     string `mapstructure:"password"`
 	Db           int    `mapstructure:"db"`
@@ -44,8 +44,8 @@ type RedisCfg struct {
 	IdleTimeout  int    `mapstructure:"idle-timeout"`
 }
 
-// LogCfg is used to configure uber zap
-type LogCfg struct {
+// LogConfig is used to configure uber zap
+type LogConfig struct {
 	Level      string `mapstructure:"level"`
 	FileName   string `mapstructure:"file-name"`
 	TimeFormat string `mapstructure:"time-format"`
@@ -58,7 +58,7 @@ type LogCfg struct {
 }
 
 // Load is a loader to load config file.
-func Load(configFilePath string) {
+func Load(configFilePath string) *Config {
 	resolveRealPath(configFilePath)
 	// 初始化配置文件
 	if err := initConfig(); err != nil {
@@ -66,6 +66,8 @@ func Load(configFilePath string) {
 	}
 	// 监控配置文件，并热加载
 	watchConfig()
+
+	return GlobalConfig
 }
 
 func initConfig() error {
@@ -80,7 +82,8 @@ func initConfig() error {
 		panic(err)
 	}
 	// 解析到struct
-	if err := viper.Unmarshal(&Cfg); err != nil {
+	GlobalConfig = &Config{}
+	if err := viper.Unmarshal(GlobalConfig); err != nil {
 		panic(err)
 	}
 	log.Println("application config load completed!")

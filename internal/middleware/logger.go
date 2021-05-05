@@ -2,10 +2,9 @@ package middleware
 
 import (
 	"apiserver-gin/pkg/constant"
-	. "apiserver-gin/pkg/log"
+	"apiserver-gin/pkg/log"
 	"bytes"
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 	"io/ioutil"
 	"time"
 )
@@ -24,19 +23,20 @@ func Logger(c *gin.Context) {
 	}
 	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(requestBody))
 
-	Log.Info("New request start",
-		zap.String(constant.RequestId, reqId),
-		zap.String("host", ip),
-		zap.String("path", reqPath),
-		zap.String("method", method),
-		zap.String("body", string(requestBody)))
+	log.Info("New request start",
+		log.WithPair(constant.RequestId, reqId),
+		log.WithPair("host", ip),
+		log.WithPair("host", ip),
+		log.WithPair("path", reqPath),
+		log.WithPair("method", method),
+		log.WithPair("body", string(requestBody)))
 
 	c.Next()
 	// 请求后
 	latency := time.Since(t)
-	Log.Info("New request end",
-		zap.String(constant.RequestId, reqId),
-		zap.String("host", ip),
-		zap.String("path", reqPath),
-		zap.Duration("cost", latency))
+	log.Info("New request end",
+		log.WithPair(constant.RequestId, reqId),
+		log.WithPair("host", ip),
+		log.WithPair("path", reqPath),
+		log.WithPair("cost", latency))
 }

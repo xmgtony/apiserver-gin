@@ -58,11 +58,11 @@ func DecodeBizErr(err error) (int, string) {
 	if err == nil {
 		return SUCCESS.ErrCode, SUCCESS.Message
 	}
-	switch errtype := err.(type) {
+	switch errType := err.(type) {
 	case *BizErr:
-		return errtype.ErrCode, errtype.Message
+		return errType.ErrCode, errType.Message
 	case *Code:
-		return errtype.ErrCode, errtype.Message
+		return errType.ErrCode, errType.Message
 	default:
 		return SystemErr.ErrCode, SystemErr.Message
 	}
