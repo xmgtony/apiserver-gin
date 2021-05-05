@@ -5,12 +5,12 @@ import (
 	"apiserver-gin/pkg/db"
 )
 
-var dao *db.Dao
+var dataBase *db.DataBase
 
 func InitDB(c config.DataBaseConfig) {
-	dao = db.New(c)
+	dataBase = db.New(c)
 }
 
 func CloseDb() {
-	dao.Close()
+	dataBase.Close()
 }
