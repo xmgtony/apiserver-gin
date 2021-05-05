@@ -13,13 +13,13 @@ import (
 	"time"
 )
 
-// Dao 数据访问对象
-type Dao struct {
+// DataBase 定义数据库访问
+type DataBase struct {
 	*gorm.DB
 }
 
-func New(c config.DataBaseConfig) *Dao {
-	return &Dao{
+func New(c config.DataBaseConfig) *DataBase {
+	return &DataBase{
 		openDB(
 			c.Username,
 			c.Password,
@@ -55,7 +55,7 @@ func openDB(user, password, host, port, dbname string, maxPoolSize, maxIdle int)
 	return db
 }
 
-func (d *Dao) Close() {
+func (d *DataBase) Close() {
 	db, _ := d.DB.DB()
 	_ = db.Close()
 }

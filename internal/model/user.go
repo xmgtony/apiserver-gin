@@ -23,11 +23,11 @@ func (user *User) Validate() error {
 }
 
 func (user *User) GetUserByName(ctx context.Context, name string) (*User, error) {
-	err := dao.DB.Where("name = ?", name).Find(user).Error
+	err := dataBase.Where("name = ?", name).Find(user).Error
 	return user, err
 }
 
 func (user *User) GetUserById(ctx context.Context, uid int64) (*User, error) {
-	err := dao.DB.Where("id = ?", uid).Find(user).Error
+	err := dataBase.Where("id = ?", uid).Find(user).Error
 	return user, err
 }
