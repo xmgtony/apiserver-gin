@@ -30,23 +30,11 @@ func init() {
 }
 
 func TestInfo(t *testing.T) {
-	Info("test info", KVPair{
-		K: "age",
-		V: 20,
-	}, KVPair{
-		K: "name",
-		V: "小明",
-	})
+	Info("test info", WithPair("age", 20), WithPair("name", "小明"))
 }
 
 func BenchmarkInfo(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		Info("test info", KVPair{
-			K: "age",
-			V: 20,
-		}, KVPair{
-			K: "name",
-			V: "小明",
-		})
+		Info("test info", WithPair("age", 20), WithPair("name", "小明"))
 	}
 }
