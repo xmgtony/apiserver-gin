@@ -150,32 +150,32 @@ func Fatal(message string, kvs ...Pair) {
 
 // Debugf 格式化输出debug级别日志
 func Debugf(template string, args ...interface{}) {
-	logger.Debugf(template, args)
+	logger.Debugf(template, args...)
 }
 
 // Infof 格式化输出info级别日志
 func Infof(template string, args ...interface{}) {
-	logger.Infof(template, args)
+	logger.Infof(template, args...)
 }
 
 // Warnf 格式化输出warn级别日志
 func Warnf(template string, args ...interface{}) {
-	logger.Warnf(template, args)
+	logger.Warnf(template, args...)
 }
 
 // Errorf 格式化输出error级别日志
 func Errorf(template string, args ...interface{}) {
-	logger.Errorf(template, args)
+	logger.Errorf(template, args...)
 }
 
 // Panicf 格式化输出日志，并panic
 func Panicf(template string, args ...interface{}) {
-	logger.Panicf(template, args)
+	logger.Panicf(template, args...)
 }
 
 // Fatalf 格式化输出日志，并退出
 func Fatalf(template string, args ...interface{}) {
-	logger.Fatalf(template, args)
+	logger.Fatalf(template, args...)
 }
 
 // Sync 关闭时需要同步日志到输出
