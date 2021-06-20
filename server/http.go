@@ -8,22 +8,28 @@ package server
 import (
 	"apiserver-gin/pkg/config"
 	"apiserver-gin/pkg/log"
+	"context"
 	"flag"
 	"fmt"
 	"net/http"
+	"os"
+	"os/signal"
+	"sync"
+	"syscall"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 //Server 代表当前服务端实例
-type Server struct {
+type HttpServer struct {
 	config *config.Config
+	f      func()
 }
 
 // NewServer 创建server实例
-func NewServer(config *config.Config) *Server {
-	return &Server{
+func NewHttpServer(config *config.Config) *HttpServer {
+	return &HttpServer{
 		config: config,
 	}
 }
@@ -57,7 +63,9 @@ func ResolveAppOptions(opt *AppOptions) {
 
 // Run server的启动入口
 // 加载路由, 启动服务
-func (s Server) Run(rls ...RouterLoad) {
+func (s HttpServer) Run(rls ...RouterLoad) {
+	var wg sync.WaitGroup
+	wg.Add(1)
 	// 设置gin启动模式，必须在创建gin实例之前
 	gin.SetMode(s.config.Mode)
 	g := gin.New()
@@ -68,17 +76,55 @@ func (s Server) Run(rls ...RouterLoad) {
 		if err := Ping(s.config.Port, s.config.MaxPingCount); err != nil {
 			log.Fatal("server no response")
 		}
-		log.Info("server started success!")
+		log.Infof("server started success! port: %s", s.config.Port)
 	}()
-	log.Info(g.Run(s.config.Port).Error())
+
+	srv := http.Server{
+		Addr:    s.config.Port,
+		Handler: g,
+	}
+	if s.f != nil {
+		srv.RegisterOnShutdown(s.f)
+	}
+	// graceful shutdown
+	sgn := make(chan os.Signal, 1)
+	signal.Notify(sgn, syscall.SIGINT,
+		syscall.SIGTERM,
+		syscall.SIGHUP,
+		syscall.SIGQUIT)
+
+	go func() {
+		<-sgn
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		if err := srv.Shutdown(ctx); err != nil {
+			log.Errorf("server shutdow err %v \n", err)
+		}
+		wg.Done()
+	}()
+
+	err := srv.ListenAndServe()
+	if err != nil {
+		if err != http.ErrServerClosed {
+			log.Errorf("server start failed on port %s", s.config.Port)
+			return
+		}
+	}
+	wg.Wait()
+	log.Infof("server stop on port %s", s.config.Port)
 }
 
 // RouterLoad 加载自定义路由
-func (s *Server) routerLoad(g *gin.Engine, rls ...RouterLoad) *Server {
+func (s *HttpServer) routerLoad(g *gin.Engine, rls ...RouterLoad) *HttpServer {
 	for _, rl := range rls {
 		rl(g)
 	}
 	return s
+}
+
+// RegisterOnShutdown 注册shutdown后的回调处理函数，用于清理资源
+func (s *HttpServer) RegisterOnShutdown(_f func()) {
+	s.f = _f
 }
 
 // Ping 用来检查是否程序正常启动

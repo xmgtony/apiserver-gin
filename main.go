@@ -27,9 +27,9 @@ func init() {
 }
 
 func main() {
-	// 程序退出需要关闭数据库连接，一般不用
-	defer func() {
+	srv := server.NewHttpServer(config.GlobalConfig)
+	srv.RegisterOnShutdown(func() {
 		model.CloseDb()
-	}()
-	server.NewServer(config.GlobalConfig).Run(router.Load)
+	})
+	srv.Run(router.Load)
 }
