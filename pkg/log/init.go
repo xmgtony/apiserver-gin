@@ -115,7 +115,7 @@ func spread(kvs ...Pair) []interface{} {
 // Debug 打印debug级别信息
 func Debug(message string, kvs ...Pair) {
 	args := spread(kvs...)
-	logger.Debugw(message, args)
+	logger.Debugw(message, args...)
 }
 
 // Info 打印info级别信息
@@ -127,25 +127,25 @@ func Info(message string, kvs ...Pair) {
 // Warn 打印warn级别信息
 func Warn(message string, kvs ...Pair) {
 	args := spread(kvs...)
-	logger.Warnw(message, args)
+	logger.Warnw(message, args...)
 }
 
 // Error 打印error级别信息
 func Error(message string, kvs ...Pair) {
 	args := spread(kvs...)
-	logger.Errorw(message, args)
+	logger.Errorw(message, args...)
 }
 
 // Panic 打印错误信息，然后panic
 func Panic(message string, kvs ...Pair) {
 	args := spread(kvs...)
-	logger.Panicw(message, args)
+	logger.Panicw(message, args...)
 }
 
 // Fatal 打印错误信息，然后退出
 func Fatal(message string, kvs ...Pair) {
 	args := spread(kvs...)
-	logger.Fatalw(message, args)
+	logger.Fatalw(message, args...)
 }
 
 // Debugf 格式化输出debug级别日志
