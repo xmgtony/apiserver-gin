@@ -33,7 +33,8 @@ func (t *JsonTime) UnmarshalJSON(data []byte) error {
 
 func (t JsonTime) Value() (driver.Value, error) {
 	tm := time.Time(t)
-	return tm.Format(constant.TimeLayout), nil
+	//return tm.Format(constant.TimeLayout), nil
+	return tm, nil
 }
 
 func (t *JsonTime) Scan(value interface{}) error {
