@@ -21,13 +21,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//Server 代表当前服务端实例
+// HttpServer 代表当前服务端实例
 type HttpServer struct {
 	config *config.Config
 	f      func()
 }
 
-// NewServer 创建server实例
+// NewHttpServer 创建server实例
 func NewHttpServer(config *config.Config) *HttpServer {
 	return &HttpServer{
 		config: config,
