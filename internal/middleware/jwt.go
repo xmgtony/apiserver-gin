@@ -8,10 +8,11 @@ package middleware
 import (
 	"apiserver-gin/pkg/config"
 	"apiserver-gin/pkg/constant"
-	"apiserver-gin/pkg/errcode"
+	"apiserver-gin/pkg/errors"
+	"apiserver-gin/pkg/errors/code"
 	"apiserver-gin/pkg/jwt"
 	"apiserver-gin/pkg/response"
-	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"strings"
 )
@@ -24,14 +25,14 @@ func AuthToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token, err := getJwtFromHeader(c)
 		if err != nil {
-			response.SendJson(c, errcode.RequireAuth, nil)
+			response.SendJson(c, errors.Wrap(err, code.RequireAuthErr, "invalid token"), nil)
 			c.Abort()
 			return
 		}
 		// 验证token是否正确
 		claims, err := jwt.ParseToken(token, config.GlobalConfig.JwtSecret)
 		if err != nil {
-			response.SendJson(c, errcode.AuthTokenErr, nil)
+			response.SendJson(c, errors.Wrap(err, code.RequireAuthErr, "invalid token"), nil)
 			c.Abort()
 			return
 		}
@@ -43,11 +44,11 @@ func AuthToken() gin.HandlerFunc {
 func getJwtFromHeader(c *gin.Context) (string, error) {
 	aHeader := c.Request.Header.Get(authorizationHeader)
 	if len(aHeader) == 0 {
-		return "", errors.New("jwt token 为空")
+		return "", fmt.Errorf("token is empty")
 	}
 	strs := strings.SplitN(aHeader, " ", 2)
 	if len(strs) != 2 || strs[0] != "Bearer" {
-		return "", errors.New("jwt token 不符合规则")
+		return "", fmt.Errorf("token 不符合规则")
 	}
 	return strs[1], nil
 }

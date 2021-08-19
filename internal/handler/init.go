@@ -6,7 +6,7 @@
 package handler
 
 import (
-	v1 "apiserver-gin/internal/handler/v1"
+	"apiserver-gin/internal/handler/v1"
 	"apiserver-gin/internal/service"
 )
 

@@ -7,9 +7,11 @@ package handler
 
 import (
 	"apiserver-gin/pkg/config"
-	"apiserver-gin/pkg/errcode"
+	"apiserver-gin/pkg/errors"
+	"apiserver-gin/pkg/errors/code"
 	"apiserver-gin/pkg/jwt"
 	"apiserver-gin/pkg/response"
+	jtime "apiserver-gin/pkg/time"
 	"apiserver-gin/tools/security"
 	"context"
 	"github.com/gin-gonic/gin"
@@ -25,27 +27,34 @@ func Login() gin.HandlerFunc {
 
 		var param LoginParam
 		if err := c.ShouldBind(&param); err != nil {
-			response.SendJson(c, errcode.UserLoginErr, nil)
+			response.SendJson(c, errors.Wrap(err, code.ValidateErr, "用户名和密码不能为空"), nil)
 			return
 		}
 		// 查询用户信息
 		user, err := s.Us.GetByName(context.TODO(), param.Username)
 		if err != nil {
-			response.SendJson(c, errcode.UserLoginErr, nil)
+			response.SendJson(c, errors.Wrap(err, code.UserLoginErr, "登录失败，用户不存在"), nil)
 			return
 		}
 
 		if !security.ValidatePassword(param.Password, user.Password) {
-			response.SendJson(c, errcode.UserLoginErr, nil)
+			response.SendJson(c, errors.Wrap(err, code.UserLoginErr, "登录失败，用户名、密码不匹配"), nil)
 			return
 		}
 		// 生成jwt token
-		claims := jwt.BuildClaims(time.Now().Add(24*7*time.Hour), user.Id)
+		expireAt := time.Now().Add(24 * 7 * time.Hour)
+		claims := jwt.BuildClaims(expireAt, user.Id)
 		token, err := jwt.GenToken(claims, config.GlobalConfig.JwtSecret)
 		if err != nil {
-			response.SendJson(c, errcode.UserLoginErr, nil)
+			response.SendJson(c, errors.Wrap(err, code.UserLoginErr, "生成用户授权token失败"), nil)
 			return
 		}
-		response.SendJson(c, nil, token)
+		response.SendJson(c, nil, struct {
+			Token    string         `json:"token"`
+			ExpireAt jtime.JsonTime `json:"expire_at"`
+		}{
+			Token:    token,
+			ExpireAt: jtime.JsonTime(expireAt),
+		})
 	}
 }

@@ -7,7 +7,8 @@ package service
 
 import (
 	"apiserver-gin/internal/model"
-	"apiserver-gin/pkg/errcode"
+	"apiserver-gin/pkg/errors"
+	"apiserver-gin/pkg/errors/code"
 	"context"
 )
 
@@ -20,7 +21,7 @@ func NewUserService() *UserService {
 // GetByName 通过用户名 查找用户
 func (s *UserService) GetByName(ctx context.Context, name string) (*model.User, error) {
 	if len(name) == 0 {
-		return nil, errcode.UserLoginErr
+		return nil, errors.WithCode(code.ValidateErr, "用户名称不能为空")
 	}
 	um := &model.User{}
 	return um.GetUserByName(ctx, name)
