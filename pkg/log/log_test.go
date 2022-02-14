@@ -24,9 +24,9 @@ func init() {
 			LocalTime:  true,
 			Console:    false,
 		},
-		ApplicationName: "zapTest",
+		AppName: "zapTest",
 	}
-	LoggerInit(&c)
+	LoggerInit(&(c.LogConfig), c.AppName)
 }
 
 func TestInfo(t *testing.T) {

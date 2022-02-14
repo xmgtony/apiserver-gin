@@ -20,10 +20,10 @@ func init() {
 	}
 	// 加载配置文件
 	c := config.Load(appOpt.ConfigFilePath)
-	log.LoggerInit(c)          // 日志
-	model.InitDB(c.DbConfig)   // 数据库连接初始化
-	s := service.InitService() // service初始化
-	handler.InitHandler(s)     // handler层注入service
+	log.LoggerInit(&c.LogConfig, c.AppName) // 日志
+	model.InitDB(c.DbConfig)                // 数据库连接初始化
+	s := service.InitService()              // service初始化
+	handler.InitHandler(s)                  // handler层注入service
 }
 
 func main() {

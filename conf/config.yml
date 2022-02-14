@@ -1,8 +1,8 @@
 mode: debug #启动模式 debug, release, test
 port: :8080 #启动端口
-name: apiserver-gin #服务名称
+app-name: apiserver-gin #服务名称
 url: http://localhost #服务本地地址
-max_ping_count: 10 #自检次数
+max-ping-count: 10 #自检次数
 jwt-secret: AC59075B964B0715
 # 数据库配置（mysql）
 database:
