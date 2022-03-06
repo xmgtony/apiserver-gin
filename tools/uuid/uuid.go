@@ -1,8 +1,9 @@
-package tools
+package uuid
 
 import (
-	"github.com/satori/go.uuid"
 	"strings"
+
+	uuid "github.com/satori/go.uuid"
 )
 
 // GenUUID 生成一个随机的唯一ID

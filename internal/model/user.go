@@ -2,7 +2,7 @@ package model
 
 import (
 	"apiserver-gin/pkg/time"
-	"context"
+
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
@@ -20,14 +20,4 @@ func (User) TableName() string {
 func (user *User) Validate() error {
 	validate := validator.New()
 	return validate.Struct(user)
-}
-
-func (user *User) GetUserByName(ctx context.Context, name string) (*User, error) {
-	err := dataBase.Where("name = ?", name).Find(user).Error
-	return user, err
-}
-
-func (user *User) GetUserById(ctx context.Context, uid int64) (*User, error) {
-	err := dataBase.Where("id = ?", uid).Find(user).Error
-	return user, err
 }

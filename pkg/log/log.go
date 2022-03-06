@@ -23,8 +23,8 @@ type logger struct {
 	_level zapcore.Level
 }
 
-// LoggerInit 初始化日志
-func LoggerInit(_cfg *config.LogConfig, appName string) {
+// InitLogger 初始化日志配置
+func InitLogger(_cfg *config.LogConfig, appName string) {
 	once.Do(func() {
 		_logger = &logger{
 			cfg: _cfg,

@@ -26,7 +26,7 @@ func init() {
 		},
 		AppName: "zapTest",
 	}
-	LoggerInit(&(c.LogConfig), c.AppName)
+	InitLogger(&(c.LogConfig), c.AppName)
 }
 
 func TestInfo(t *testing.T) {

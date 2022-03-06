@@ -2,11 +2,12 @@ package middleware
 
 import (
 	"apiserver-gin/pkg/constant"
-	"apiserver-gin/tools"
-	"github.com/gin-gonic/gin"
+	"apiserver-gin/tools/uuid"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 // NoCache 控制客户端不要使用缓存
@@ -52,7 +53,7 @@ func Secure() gin.HandlerFunc {
 // RequestId 用来设置和透传requestId
 func RequestId() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		requestId := tools.GenUUID16()
+		requestId := uuid.GenUUID16()
 		c.Header("X-Request-Id", requestId)
 
 		// 设置requestId到context中，便于后面调用链的透传

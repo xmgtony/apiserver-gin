@@ -3,9 +3,10 @@ package response
 import (
 	"apiserver-gin/pkg/errors"
 	"apiserver-gin/pkg/errors/code"
-	"apiserver-gin/tools"
-	"github.com/gin-gonic/gin"
+	"apiserver-gin/tools/uuid"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 // ApiResponse 代表一个响应给客户端的消息结构，包括错误码，错误消息，响应数据
@@ -20,7 +21,7 @@ type ApiResponse struct {
 func SendJson(c *gin.Context, err error, data interface{}) {
 	errCode, message := errors.DecodeErr(err)
 	// 如果code != 0, 失败的话 返回http状态码400（一般也可以全部返回200）
-	//返回400 更严谨一些，个人接触的项目中大部分都是400。
+	// 返回400 更严谨一些，个人接触的项目中大部分都是400。
 	var httpStatus int
 	if errCode != code.Success {
 		httpStatus = http.StatusBadRequest
@@ -28,7 +29,7 @@ func SendJson(c *gin.Context, err error, data interface{}) {
 		httpStatus = http.StatusOK
 	}
 	c.JSON(httpStatus, ApiResponse{
-		RequestId: tools.GenUUID16(),
+		RequestId: uuid.GenUUID16(),
 		ErrCode:   errCode,
 		Message:   message,
 		Data:      data,

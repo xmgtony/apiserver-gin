@@ -1,29 +1,30 @@
 package config
 
 import (
-	"github.com/fsnotify/fsnotify"
-	"github.com/spf13/viper"
 	"log"
 	"strings"
+
+	"github.com/fsnotify/fsnotify"
+	"github.com/spf13/viper"
 )
 
 var GlobalConfig *Config
 
 // Config is application global config
 type Config struct {
-	Mode         string         `mapstructure:"mode"`           // gin启动模式
-	Port         string         `mapstructure:"port"`           // 启动端口
-	AppName      string         `mapstructure:"app-name"`       //应用名称
-	Url          string         `mapstructure:"url"`            // 应用地址,用于自检 eg. http://127.0.01
-	MaxPingCount int            `mapstructure:"max-ping-count"` // 最大自检次数，用户健康检查
-	JwtSecret    string         `mapstructure:"jwt-secret"`
-	DbConfig     DataBaseConfig `mapstructure:"database"` // 数据库信息
-	RedisConfig  RedisConfig    `mapstructure:"redis"`    // redis
-	LogConfig    LogConfig      `mapstructure:"log"`      // uber zap
+	Mode         string      `mapstructure:"mode"`           // gin启动模式
+	Port         string      `mapstructure:"port"`           // 启动端口
+	AppName      string      `mapstructure:"app-name"`       //应用名称
+	Url          string      `mapstructure:"url"`            // 应用地址,用于自检 eg. http://127.0.01
+	MaxPingCount int         `mapstructure:"max-ping-count"` // 最大自检次数，用户健康检查
+	JwtSecret    string      `mapstructure:"jwt-secret"`
+	DBConfig     DBConfig    `mapstructure:"database"` // 数据库信息
+	RedisConfig  RedisConfig `mapstructure:"redis"`    // redis
+	LogConfig    LogConfig   `mapstructure:"log"`      // uber zap
 }
 
-// DataBaseConfig is used to configure mysql database
-type DataBaseConfig struct {
+// DBConfig is used to configure mysql database
+type DBConfig struct {
 	Dbname          string `mapstructure:"dbname"`
 	Host            string `mapstructure:"host"`
 	Port            string `mapstructure:"port"`

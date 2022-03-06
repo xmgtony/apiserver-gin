@@ -14,7 +14,7 @@ build: target
 	-X ${version_package}.BranchName=${branch_name} \
 	-X ${version_package}.BuildTime=${build_time} \
 	-X ${version_package}.AppVersion=${app_version}" -v \
-	-o ${work_dir}/${app_name} .
+	-o ${work_dir}/${app_name} ./cmd/.
 # show go version
 version:
 	@$(goversion)
@@ -28,7 +28,7 @@ target:
 package: build
 	@# 使用tar命令对${word_dir下面的文件打包}
 	cp -r conf  ${work_dir}/
-	cp ./startup.sh ${work_dir}/
+	cp ./scripts/startup.sh ${work_dir}/
 	cd ${work_dir}/ && tar -zcvf ${app_name}.tar.gz *
 
 .PHONY: version clean build package all

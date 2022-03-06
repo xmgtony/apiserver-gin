@@ -1,6 +1,6 @@
 # sql脚本
-CREATE DATABASE `go_test`;
-USE `go_test`;
+CREATE DATABASE `apiserver_gin`;
+USE `apiserver_gin`;
 # 创建表也可以使用gorm提供的自动方式
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`

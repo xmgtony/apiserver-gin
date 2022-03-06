@@ -34,7 +34,7 @@ func NewHttpServer(config *config.Config) *HttpServer {
 	}
 }
 
-// RouterLoad 加载路由, 被调用方需要实现该方法
+// RouterLoad 加载路由, 被调用方需要实现该类型
 type RouterLoad func(g *gin.Engine)
 
 // AppOptions 用来接收应用启动时指定的参数

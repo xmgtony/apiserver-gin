@@ -1,14 +1,22 @@
 package router
 
 import (
-	"apiserver-gin/internal/handler"
 	"apiserver-gin/internal/handler/ping"
-	v1 "apiserver-gin/internal/handler/v1"
+	"apiserver-gin/internal/handler/v1/user"
 	"apiserver-gin/internal/middleware"
+	"apiserver-gin/pkg/log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
+
+var (
+	userHadler *user.UserHandler
+)
+
+func InitRouter(_userHandler *user.UserHandler) {
+	userHadler = _userHandler
+}
 
 // Load 加载中间件和路由信息
 func Load(g *gin.Engine) {
@@ -29,7 +37,12 @@ func Load(g *gin.Engine) {
 	g.GET("/ping", ping.Ping())
 	// user group
 	ug := g.Group("/v1/user", middleware.AuthToken())
-	ug.GET("", v1.GetUserInfo())
-	// login
-	g.POST("/login", handler.Login())
+	{
+		if userHadler == nil {
+			log.Fatal("UserHandler 未初始化")
+		}
+		ug.GET("", userHadler.GetUserInfo())
+		// login
+		ug.POST("/login", userHadler.Login())
+	}
 }

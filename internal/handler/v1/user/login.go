@@ -3,7 +3,7 @@
 // email xmgtony@gmail.com
 // description 用户登录
 
-package handler
+package user
 
 import (
 	"apiserver-gin/pkg/config"
@@ -14,11 +14,12 @@ import (
 	jtime "apiserver-gin/pkg/time"
 	"apiserver-gin/tools/security"
 	"context"
-	"github.com/gin-gonic/gin"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
-func Login() gin.HandlerFunc {
+func (uh *UserHandler) Login() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		type LoginParam struct {
 			Username string `json:"username" binding:"required"`
@@ -31,7 +32,7 @@ func Login() gin.HandlerFunc {
 			return
 		}
 		// 查询用户信息
-		user, err := s.Us.GetByName(context.TODO(), param.Username)
+		user, err := uh.userSrv.GetByName(context.TODO(), param.Username)
 		if err != nil {
 			response.SendJson(c, errors.Wrap(err, code.UserLoginErr, "登录失败，用户不存在"), nil)
 			return
