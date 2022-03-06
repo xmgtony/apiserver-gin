@@ -26,8 +26,8 @@ func main() {
 	ds := db.NewDefaultMysql(c.DBConfig) // 创建数据库链接，使用默认的实现方式
 	userRepo := mysql.NewUserRepo(ds)
 	userSrv := service.NewUserService(userRepo) // 创建userService
-	userHander := user.NewUserHandler(userSrv)  // 创建userHandler
-	router.InitRouter(userHander)               // router 包注入userHandler
+	userHandler := user.NewUserHandler(userSrv) // 创建userHandler
+	router.InitRouter(userHandler)              // router 包注入userHandler
 
 	// 创建HTTPServer
 	srv := server.NewHttpServer(config.GlobalConfig)
