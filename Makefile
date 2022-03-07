@@ -1,4 +1,4 @@
-goversion = $(shell go version)
+go_version = $(shell go version)
 commit_id = $(shell git rev-parse HEAD)
 branch_name = $(shell git name-rev --name-only HEAD)
 build_time = $(shell date -u '+%Y-%m-%d_%H:%M:%S')
@@ -17,7 +17,7 @@ build: target
 	-o ${work_dir}/${app_name} ./cmd/.
 # show go version
 version:
-	@$(goversion)
+	@$(go_version)
 	@echo APP_VERSION $(app_version)
 clean:
 	@rm -rf target

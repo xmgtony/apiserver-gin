@@ -11,7 +11,7 @@ func GenUUID() string {
 	return uuid.NewV4().String()
 }
 
-// GenUUID32 截取uuid前16位
+// GenUUID16 截取uuid前16位
 func GenUUID16() string {
 	uuidStr := uuid.NewV4().String()
 	uuidStr = strings.ReplaceAll(uuidStr, "-", "")
