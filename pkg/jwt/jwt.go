@@ -6,25 +6,24 @@
 package jwt
 
 import (
-	"github.com/dgrijalva/jwt-go/v4"
+	"apiserver-gin/pkg/config"
+	"github.com/golang-jwt/jwt/v4"
 	"time"
 )
 
-const Issuer = "apiserver-gin"
-
-// 在标准声明中加入用户id
+// CustomClaims 在标准声明中加入用户id
 type CustomClaims struct {
 	UserId int64 `json:"user_id"`
-	jwt.StandardClaims
+	jwt.RegisteredClaims
 }
 
 func BuildClaims(exp time.Time, uid int64) *CustomClaims {
 	return &CustomClaims{
 		UserId: uid,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: jwt.At(exp),
-			IssuedAt:  jwt.At(time.Now()),
-			Issuer:    Issuer,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(exp),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			Issuer:    config.GlobalConfig.AppName,
 		},
 	}
 }
