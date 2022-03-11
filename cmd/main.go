@@ -27,7 +27,7 @@ func main() {
 	userRepo := mysql.NewUserRepo(ds)
 	userSrv := service.NewUserService(userRepo) // 创建userService
 	userHandler := user.NewUserHandler(userSrv) // 创建userHandler
-	router.InitRouter(userHandler)              // router 包注入userHandler
+	rt := router.NewRouter(userHandler)         // router 包注入userHandler
 
 	// 创建HTTPServer
 	srv := server.NewHttpServer(config.GlobalConfig)
@@ -36,5 +36,5 @@ func main() {
 			ds.Close()
 		}
 	})
-	srv.Run(router.Load)
+	srv.Run(rt)
 }

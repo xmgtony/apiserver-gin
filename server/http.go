@@ -34,8 +34,10 @@ func NewHttpServer(config *config.Config) *HttpServer {
 	}
 }
 
-// RouterLoad 加载路由, 被调用方需要实现该类型
-type RouterLoad func(g *gin.Engine)
+// Router 加载路由，使用侧提供接口，实现侧需要实现该接口
+type Router interface {
+	Load(engine *gin.Engine)
+}
 
 // AppOptions 用来接收应用启动时指定的参数
 type AppOptions struct {
@@ -63,13 +65,13 @@ func ResolveAppOptions(opt *AppOptions) {
 
 // Run server的启动入口
 // 加载路由, 启动服务
-func (s HttpServer) Run(rls ...RouterLoad) {
+func (s HttpServer) Run(rs ...Router) {
 	var wg sync.WaitGroup
 	wg.Add(1)
 	// 设置gin启动模式，必须在创建gin实例之前
 	gin.SetMode(s.config.Mode)
 	g := gin.New()
-	s.routerLoad(g, rls...)
+	s.routerLoad(g, rs...)
 
 	// health check
 	go func() {
@@ -98,7 +100,7 @@ func (s HttpServer) Run(rls ...RouterLoad) {
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
 		if err := srv.Shutdown(ctx); err != nil {
-			log.Errorf("server shutdow err %v \n", err)
+			log.Errorf("server shutdown err %v \n", err)
 		}
 		wg.Done()
 	}()
@@ -115,9 +117,9 @@ func (s HttpServer) Run(rls ...RouterLoad) {
 }
 
 // RouterLoad 加载自定义路由
-func (s *HttpServer) routerLoad(g *gin.Engine, rls ...RouterLoad) *HttpServer {
-	for _, rl := range rls {
-		rl(g)
+func (s *HttpServer) routerLoad(g *gin.Engine, rs ...Router) *HttpServer {
+	for _, r := range rs {
+		r.Load(g)
 	}
 	return s
 }

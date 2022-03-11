@@ -9,16 +9,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var (
-	userHandler *user.UserHandler
-)
+// router Router路由接口的默认实现
+type router struct {
+	uh *user.UserHandler
+}
 
-func InitRouter(_userHandler *user.UserHandler) {
-	userHandler = _userHandler
+func NewRouter(_uh *user.UserHandler) *router {
+	return &router{
+		uh: _uh,
+	}
 }
 
 // Load 加载中间件和路由信息
-func Load(g *gin.Engine) {
+func (r *router) Load(g *gin.Engine) {
 	// 注册中间件
 	g.Use(gin.Logger())
 	g.Use(gin.Recovery())
@@ -35,12 +38,12 @@ func Load(g *gin.Engine) {
 	// ping server
 	g.GET("/ping", ping.Ping())
 	// login
-	g.POST("/login", userHandler.Login())
+	g.POST("/login", r.uh.Login())
 	// user group
 	ug := g.Group("/v1/user", middleware.AuthToken())
 	{
-		ug.GET("", userHandler.GetUserInfo())
+		ug.GET("", r.uh.GetUserInfo())
 		// login
-		ug.POST("/login", userHandler.Login())
+		ug.POST("/login", r.uh.Login())
 	}
 }
