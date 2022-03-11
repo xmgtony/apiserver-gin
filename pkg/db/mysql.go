@@ -14,6 +14,8 @@ import (
 	"gorm.io/gorm"
 )
 
+var _ IDataSource = (*defaultMysqlDataSource)(nil)
+
 // IDataSource 定义数据库数据源接口，按照业务需求可以返回主库链接Master和从库链接Slave
 type IDataSource interface {
 	Master() *gorm.DB
@@ -58,7 +60,7 @@ func (d *defaultMysqlDataSource) Close() {
 	}
 }
 
-func NewDefaultMysql(c config.DBConfig) IDataSource {
+func NewDefaultMysql(c config.DBConfig) *defaultMysqlDataSource {
 	return &defaultMysqlDataSource{
 		master: connect(
 			c.Username,

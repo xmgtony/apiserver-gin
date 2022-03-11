@@ -13,6 +13,8 @@ import (
 	"context"
 )
 
+var _ UserService = (*userService)(nil)
+
 // UserService 定义用户操作服务接口
 type UserService interface {
 	GetByName(ctx context.Context, name string) (*model.User, error)
@@ -24,7 +26,7 @@ type userService struct {
 	ur repo.UserRepo
 }
 
-func NewUserService(_ur repo.UserRepo) UserService {
+func NewUserService(_ur repo.UserRepo) *userService {
 	return &userService{
 		ur: _ur,
 	}

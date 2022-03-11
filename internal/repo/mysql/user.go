@@ -7,11 +7,13 @@ import (
 	"context"
 )
 
+var _ repo.UserRepo = (*userRepo)(nil)
+
 type userRepo struct {
 	ds db.IDataSource
 }
 
-func NewUserRepo(_ds db.IDataSource) repo.UserRepo {
+func NewUserRepo(_ds db.IDataSource) *userRepo {
 	return &userRepo{
 		ds: _ds,
 	}
