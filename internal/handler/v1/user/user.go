@@ -32,9 +32,9 @@ func (uh *UserHandler) GetUserInfo() gin.HandlerFunc {
 		uid := c.GetInt64(constant.UserID)
 		user, err := uh.userSrv.GetById(context.TODO(), uid)
 		if err != nil {
-			response.SendJson(c, errors.Wrap(err, code.NotFoundErr, "用户信息为空"), nil)
+			response.Json(c, errors.Wrap(err, code.NotFoundErr, "用户信息为空"), nil)
 		} else {
-			response.SendJson(c, nil, user)
+			response.Json(c, nil, user)
 		}
 	}
 }
