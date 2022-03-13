@@ -25,14 +25,14 @@ func AuthToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token, err := getJwtFromHeader(c)
 		if err != nil {
-			response.Json(c, errors.Wrap(err, code.RequireAuthErr, "invalid token"), nil)
+			response.JSON(c, errors.Wrap(err, code.RequireAuthErr, "invalid token"), nil)
 			c.Abort()
 			return
 		}
 		// 验证token是否正确
 		claims, err := jwt.ParseToken(token, config.GlobalConfig.JwtSecret)
 		if err != nil {
-			response.Json(c, errors.Wrap(err, code.RequireAuthErr, "invalid token"), nil)
+			response.JSON(c, errors.Wrap(err, code.RequireAuthErr, "invalid token"), nil)
 			c.Abort()
 			return
 		}
