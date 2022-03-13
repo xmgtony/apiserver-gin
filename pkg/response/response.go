@@ -1,9 +1,9 @@
 package response
 
 import (
+	"apiserver-gin/pkg/constant"
 	"apiserver-gin/pkg/errors"
 	"apiserver-gin/pkg/errors/code"
-	"apiserver-gin/tools/uuid"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -29,7 +29,7 @@ func JSON(c *gin.Context, err error, data interface{}) {
 		httpStatus = http.StatusOK
 	}
 	c.JSON(httpStatus, ApiResponse{
-		RequestId: uuid.GenUUID16(),
+		RequestId: c.GetString(constant.RequestId),
 		ErrCode:   errCode,
 		Message:   message,
 		Data:      data,
