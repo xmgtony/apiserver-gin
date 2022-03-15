@@ -87,7 +87,7 @@ func initConfig() error {
 	if err := viper.Unmarshal(GlobalConfig); err != nil {
 		panic(err)
 	}
-	log.Println("application config load completed!")
+	log.Println("The application configuration file is loaded successfully!")
 	return nil
 }
 
@@ -96,7 +96,7 @@ func initConfig() error {
 func watchConfig() {
 	viper.WatchConfig()
 	viper.OnConfigChange(func(in fsnotify.Event) {
-		log.Printf("Config file changed: %s, will reload it", in.Name)
+		log.Printf("Configuration file changed: %s, reload it", in.Name)
 		// 忽略错误
 		Load(in.Name)
 	})

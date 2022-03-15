@@ -24,19 +24,19 @@ func Logger(c *gin.Context) {
 	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(requestBody))
 
 	log.Info("New request start",
-		log.WithPair(constant.RequestId, reqId),
-		log.WithPair("host", ip),
-		log.WithPair("host", ip),
-		log.WithPair("path", reqPath),
-		log.WithPair("method", method),
-		log.WithPair("body", string(requestBody)))
+		log.Pair(constant.RequestId, reqId),
+		log.Pair("host", ip),
+		log.Pair("host", ip),
+		log.Pair("path", reqPath),
+		log.Pair("method", method),
+		log.Pair("body", string(requestBody)))
 
 	c.Next()
 	// 请求后
 	latency := time.Since(t)
 	log.Info("New request end",
-		log.WithPair(constant.RequestId, reqId),
-		log.WithPair("host", ip),
-		log.WithPair("path", reqPath),
-		log.WithPair("cost", latency))
+		log.Pair(constant.RequestId, reqId),
+		log.Pair("host", ip),
+		log.Pair("path", reqPath),
+		log.Pair("cost", latency))
 }
