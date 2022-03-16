@@ -15,8 +15,15 @@
 - 加入viper使用yml配置文件来配置项目信息，启动时指定不同的配置文件
 
 ```html
-eg.
+*** 直接运行 ***
+eg. 在cmd目录下执行（也可以在其他目录执行，注意配置文件路径，默认寻找当前执行路径下conf目录中的config.yml文件）
 go run main.go -c ./conf/config.yml
+
+*** 使用make ***
+//1、打包（Linux/MacOS 下），在项目目录下执行make命令，打好的包在target目录下
+make 
+//2、删除已打的包
+make clean
 ```
 
 - 集成gorm 并自定义JsonTime 解决Json序列化和反序列化只支持UTC时间的问题（可以自定义时间格式）  
