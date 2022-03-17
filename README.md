@@ -40,4 +40,4 @@ make clean
 - 完善了项目版本管理，使用make命令编译后的项目可以方便跟踪线上发布版本
 - 其他一些坑，后续会出一系列配置与使用教程。
 
-### [使用文档](https://github.com/xmgtony/apiserver-gin/docs/quick_start.md)。
+#### [使用文档-点这里](https://github.com/xmgtony/apiserver-gin/blob/master/docs/quick_start.md)
