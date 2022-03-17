@@ -17,7 +17,7 @@
 ```html
 *** 直接运行 ***
 eg. 在cmd目录下执行（也可以在其他目录执行，注意配置文件路径，默认寻找当前执行路径下conf目录中的config.yml文件）
-go run main.go -c ./conf/config.yml
+go run . -c ../conf/config.yml
 
 *** 使用make ***
 //1、打包（Linux/MacOS 下），在项目目录下执行make命令，打好的包在target目录下
@@ -39,4 +39,5 @@ make clean
 - 添加makefile，可以使用make 命令进行编译，打包。
 - 完善了项目版本管理，使用make命令编译后的项目可以方便跟踪线上发布版本
 - 其他一些坑，后续会出一系列配置与使用教程。
-### 项目使用文档 ，完善中......，敬请期待。
+
+### [使用文档](https://github.com/xmgtony/apiserver-gin/docs/quick_start.md)。

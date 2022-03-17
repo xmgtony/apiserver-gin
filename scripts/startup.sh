@@ -5,7 +5,7 @@ RUN_PID=''
 PID_FILE=""
 startup() {
     #把项目送入后台执行，然后把pid写入对应的文件中
-    nohup "./$APPLICATION_NAME" -c conf/config-prod.yml > nohup.out 2>&1 & echo $! > "${PID_FILE}"
+    nohup "./$APPLICATION_NAME" -c conf/config.yml > nohup.out 2>&1 & echo $! > "${PID_FILE}"
     if [ -n "$!" ]; then
         echo "已启动${APPLICATION_NAME}..."
         echo "进程pid：$!"
