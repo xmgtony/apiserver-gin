@@ -39,7 +39,7 @@ func (uh *UserHandler) Login() gin.HandlerFunc {
 		}
 
 		if !security.ValidatePassword(param.Password, user.Password) {
-			response.JSON(c, errors.Wrap(err, code.UserLoginErr, "登录失败，用户名、密码不匹配"), nil)
+			response.JSON(c, errors.WithCode(code.UserLoginErr, "登录失败，用户名、密码不匹配"), nil)
 			return
 		}
 		// 生成jwt token
