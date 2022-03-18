@@ -29,7 +29,7 @@ database:
 （注意：当前cmd下有多个go文件，包括main.go 都是在package main下，所以不能使用go run main.go方式运行，因为不会加载同包以下其他go文件，会报错。）
 
 ```shell
-$> go run . -c ../conf/config.yml
+>$ go run . -c ../conf/config.yml
 ```
 
 不出意外控制台会输出以下信息：
@@ -56,7 +56,7 @@ $> go run . -c ../conf/config.yml
 
 ```shell
 # 在项目目录下执行make命令，会自动在当前目录寻找Makefile文件
-$> make
+>$ make
 # 控制台会输出
 cp -r conf  target/
 cp ./scripts/startup.sh target/
@@ -70,7 +70,7 @@ a startup.sh
 然后我们可以去target目录查看生成的文件信息
 
 ```shell
-$>  tree target
+>$  tree target
 target
 ├── apiserver-gin
 ├── apiserver-gin.tar.gz
@@ -84,7 +84,7 @@ target
 我们可以直接使用启动脚本启动项目
 
 ```shell
-$>  ./startup.sh apiserver-gin
+>$  ./startup.sh apiserver-gin
 # 控制台输出
 已启动apiserver-gin...
 进程pid：2477
@@ -93,21 +93,45 @@ $>  ./startup.sh apiserver-gin
 我们可以查看下进程是否启动
 
 ```shell
-$> ps aux | grep apiserver-gin
+>$ ps aux | grep apiserver-gin
 ```
 
 启动后可以访问 http://127.0.0.1:8080/v1/user
 
 ```shell
-$> curl http://127.0.0.1:8080/v1/user
+>$ curl http://127.0.0.1:8080/v1/user
 
 {"request_id":"1c928f4b538147f1","err_code":40001,"message":"invalid token, token is empty"}
+```
+
+返回的信息告诉我们需要一个token，我们需要先登录拿到token, 初始化用户名和密码分别为：xmgtony，123456
+
+```shell
+>$ curl -H "Content-Type:application/json" -X POST -d '{"username":"xmgtony","password":"123456"}' http://127.0.0.1:8080/login
+
+{
+	"request_id": "6e513fddbf694d84",
+	"err_code": 0,
+	"message": "success",
+	"data": {
+		"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpc3MiOiJhcGlzZXJ2ZXItZ2luIiwiZXhwIjoxNjQ4MjE4ODQ5LCJpYXQiOjE2NDc2MTQwNDl9.0dCx7ciHipYYUWlTmGxvUQpTp0vf79XRp5kQWQJTz04",
+		"expire_at": "2022-03-25 22:34:09"
+	}
+}
+```
+
+可以看到成功后返回了token以及token的过期时间，然后把token放在请求的header中，再次查询用户信息
+
+```shell
+curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpc3MiOiJhcGlzZXJ2ZXItZ2luIiwiZXhwIjoxNjQ4MjE4ODQ5LCJpYXQiOjE2NDc2MTQwNDl9.0dCx7ciHipYYUWlTmGxvUQpTp0vf79XRp5kQWQJTz04" http://127.0.0.1:8080/v1/user 
+
+{"request_id":"3522cfa70f234fce","err_code":0,"message":"success","data":{"id":1,"created":"2022-03-06 12:45:32","modified":"2022-03-06 12:45:32","name":"xmgtony","birthday":"0001-01-01 00:00:00"}}
 ```
 
 清除打包信息，会删除target目录
 
 ```shell
-$> make clean 
+>$ make clean 
 ```
 
 #### 后续会推出相关教程，介绍设计理念，以及在实际企业中的开发规范。
