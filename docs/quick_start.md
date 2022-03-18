@@ -90,13 +90,19 @@ target
 进程pid：2477
 ```
 
-我们可以查看下进程是否启动
+可以查看下进程是否启动
 
 ```shell
 >$ ps aux | grep apiserver-gin
 ```
 
-启动后可以访问 http://127.0.0.1:8080/v1/user
+清除打包信息，会删除target目录
+
+```shell
+>$ make clean 
+```
+
+项目启动后可以访问 http://127.0.0.1:8080/v1/user
 
 ```shell
 >$ curl http://127.0.0.1:8080/v1/user
@@ -126,12 +132,6 @@ target
 curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpc3MiOiJhcGlzZXJ2ZXItZ2luIiwiZXhwIjoxNjQ4MjE4ODQ5LCJpYXQiOjE2NDc2MTQwNDl9.0dCx7ciHipYYUWlTmGxvUQpTp0vf79XRp5kQWQJTz04" http://127.0.0.1:8080/v1/user 
 
 {"request_id":"3522cfa70f234fce","err_code":0,"message":"success","data":{"id":1,"created":"2022-03-06 12:45:32","modified":"2022-03-06 12:45:32","name":"xmgtony","birthday":"0001-01-01 00:00:00"}}
-```
-
-清除打包信息，会删除target目录
-
-```shell
->$ make clean 
 ```
 
 #### 后续会推出相关教程，介绍设计理念，以及在实际企业中的开发规范。
