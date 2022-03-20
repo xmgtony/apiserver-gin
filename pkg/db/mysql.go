@@ -14,6 +14,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// var _ IDataSource = new(*defaultMysqlDataSource) 也可
 var _ IDataSource = (*defaultMysqlDataSource)(nil)
 
 // IDataSource 定义数据库数据源接口，按照业务需求可以返回主库链接Master和从库链接Slave
@@ -31,14 +32,14 @@ type defaultMysqlDataSource struct {
 
 func (d *defaultMysqlDataSource) Master() *gorm.DB {
 	if d.master == nil {
-		panic("The [master] connection is nil, please initial first it.")
+		panic("The [master] connection is nil, Please initialize it first.")
 	}
 	return d.master
 }
 
 func (d *defaultMysqlDataSource) Slave() *gorm.DB {
 	if d.master == nil {
-		panic("The [slave] connection is nil, please initial first it.")
+		panic("The [slave] connection is nil, Please initialize it first.")
 	}
 	return d.slave
 }
