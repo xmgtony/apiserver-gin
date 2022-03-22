@@ -31,7 +31,7 @@ make
 //2、删除已打的包
 make clean
 ```
-
+- 优雅停机实现，停机时清理资源。
 - 集成gorm 并自定义JsonTime 解决Json序列化和反序列化只支持UTC时间的问题（可以自定义时间格式）  
   提供了部分demo，可以按照demo在项目中直接使用。
 - 整合redis，开箱即用，通过yml文件对redis进行配置
