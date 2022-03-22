@@ -3,6 +3,12 @@
 基于gin的api服务端脚手架。 对于新手学习使用gin搭建go服务端项目，熟悉项目规划，了解生产项目结构和细节设计感觉会有很大帮助。 本项目依然是按照单体项目布局来做的，后面会完善多模块项目推荐的布局(
 比如一个项目既有app端server，又有管理后台server)。
 
+### 理论基础
+#### 清洁架构 [(Robert C. Martin)](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+![image](https://user-images.githubusercontent.com/8643542/159397149-17f58fba-a3c0-4874-b49a-ae724989af59.png)
+
+按照依赖注入，面向对象编程思想，开闭原则，可拓展，可测性等原则来规划项目。
+
 ### 更新日志
 ***2022-03-15：实现日志requestId等透传，使用示例 pkg/log/log_test.go***
 
