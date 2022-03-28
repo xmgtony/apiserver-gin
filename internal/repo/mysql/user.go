@@ -30,3 +30,12 @@ func (ur *userRepo) GetUserById(ctx context.Context, uid int64) (*model.User, er
 	err := ur.ds.Master().Where("id = ?", uid).Find(user).Error
 	return user, err
 }
+
+func (ur *userRepo) GetUserByIdentification(ctx context.Context, ID string) (*model.User, error) {
+	user := &model.User{}
+	err := ur.ds.Master().
+		Where("(mobile = ? or email = ?)", ID, ID).
+		Where("enabled_status = 1").
+		First(user).Error
+	return user, err
+}
