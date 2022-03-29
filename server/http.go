@@ -8,6 +8,7 @@ package server
 import (
 	"apiserver-gin/pkg/config"
 	"apiserver-gin/pkg/log"
+	"apiserver-gin/pkg/validator"
 	"context"
 	"flag"
 	"fmt"
@@ -72,6 +73,8 @@ func (s HttpServer) Run(rs ...Router) {
 	gin.SetMode(s.config.Mode)
 	g := gin.New()
 	s.routerLoad(g, rs...)
+	// gin validator替换
+	validator.LazyInitGinValidator(s.config.Language)
 
 	// health check
 	go func() {

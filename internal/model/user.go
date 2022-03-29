@@ -22,6 +22,6 @@ func (User) TableName() string {
 
 //LoginReq 登录请求，登录标识ID需要为邮件或者手机号码，密码介于6-32之间
 type LoginReq struct {
-	ID       string `json:"ID" validate:"required,email|mobile"`
-	Password string `json:"password" binding:"required,gte=6,lte=32"`
+	Mobile   string `json:"mobile" validate:"required,mobile" label:"手机号"`
+	Password string `json:"password" validate:"required,gte=6,lte=32" label:"密码"`
 }

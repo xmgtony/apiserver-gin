@@ -28,7 +28,7 @@ func (uh *UserHandler) Login() gin.HandlerFunc {
 			return
 		}
 		// 查询用户信息
-		user, err := uh.userSrv.GetByIdentification(context.TODO(), loginReqParam.ID)
+		user, err := uh.userSrv.GetByMobile(context.TODO(), loginReqParam.Mobile)
 		if err != nil {
 			response.JSON(c, errors.Wrap(err, code.UserLoginErr, "登录失败，用户不存在"), nil)
 			return

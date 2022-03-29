@@ -21,5 +21,5 @@ CREATE TABLE `user`
   charset = utf8 comment '用户信息表';
 # 初始化数据
 INSERT INTO `user` (`name`, `password`, `mobile`, `email`, `enabled_status`)
-VALUES ('测试账户', '$2a$10$vTNEx1HYfIUkMAYUs0Wz/uLrmZjb.WirLJF0ONU5/roHkX0O/6VyO', '18200000000',
+VALUES ('测试账户', '$2a$10$vTNEx1HYfIUkMAYUs0Wz/uLrmZjb.WirLJF0ONU5/roHkX0O/6VyO', '10100000000',
         'xmgtony@gmail.com', 1);
