@@ -18,6 +18,7 @@ type Config struct {
 	Url          string      `mapstructure:"url"`            // 应用地址,用于自检 eg. http://127.0.0.1
 	MaxPingCount int         `mapstructure:"max-ping-count"` // 最大自检次数，用户健康检查
 	JwtSecret    string      `mapstructure:"jwt-secret"`
+	Language     string      `mapstructure:"language"` // 项目语言
 	DBConfig     DBConfig    `mapstructure:"database"` // 数据库信息
 	RedisConfig  RedisConfig `mapstructure:"redis"`    // redis
 	LogConfig    LogConfig   `mapstructure:"log"`      // uber zap

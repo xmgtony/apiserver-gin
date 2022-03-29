@@ -6,6 +6,7 @@
 package user
 
 import (
+	"apiserver-gin/internal/model"
 	"apiserver-gin/pkg/config"
 	"apiserver-gin/pkg/errors"
 	"apiserver-gin/pkg/errors/code"
@@ -21,24 +22,19 @@ import (
 
 func (uh *UserHandler) Login() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		type LoginParam struct {
-			Username string `json:"username" binding:"required"`
-			Password string `json:"password" binding:"required"`
-		}
-
-		var param LoginParam
-		if err := c.ShouldBind(&param); err != nil {
-			response.JSON(c, errors.Wrap(err, code.ValidateErr, "用户名和密码不能为空"), nil)
+		loginReqParam := model.LoginReq{}
+		if err := c.ShouldBind(&loginReqParam); err != nil {
+			response.JSON(c, errors.WithCode(code.ValidateErr, err.Error()), nil)
 			return
 		}
 		// 查询用户信息
-		user, err := uh.userSrv.GetByName(context.TODO(), param.Username)
+		user, err := uh.userSrv.GetByMobile(context.TODO(), loginReqParam.Mobile)
 		if err != nil {
 			response.JSON(c, errors.Wrap(err, code.UserLoginErr, "登录失败，用户不存在"), nil)
 			return
 		}
 
-		if !security.ValidatePassword(param.Password, user.Password) {
+		if !security.ValidatePassword(loginReqParam.Password, user.Password) {
 			response.JSON(c, errors.WithCode(code.UserLoginErr, "登录失败，用户名、密码不匹配"), nil)
 			return
 		}
