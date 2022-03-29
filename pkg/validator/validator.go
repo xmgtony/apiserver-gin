@@ -1,61 +1,41 @@
 // author: maxf
 // date: 2022-03-28 15:30
-// version: 校验器
+// version: 自定义校验器
 
 package validator
 
 import (
+	"bytes"
 	"context"
-	"github.com/go-playground/locales/en"
-	"github.com/go-playground/locales/zh"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
-	enTranslations "github.com/go-playground/validator/v10/translations/en"
-	zhTranslations "github.com/go-playground/validator/v10/translations/zh"
-	"reflect"
-	"sync"
 )
 
-const tagName = "label"
-
-var (
-	once sync.Once
-	v    *validator.Validate
-)
-
-func Init(language string) {
-	once.Do(func() {
-		v = validator.New()
-		registerTranslator(v, language)
-		registerTagNameFunc(v, tagName)
-	})
+type Validator interface {
+	ValidStruct(data interface{}) error
+	ValidStructCtx(ctx context.Context, data interface{}) error
+	RegisterTranslator(language string) Validator
+	RegisterTagNameFunc(tagName string) Validator
+	ValidatorEngine() *validator.Validate
+	RegisterValidation(tagName, Msg string, f RegisterFunc) error // 注册自定义标签，注册自定义标签的翻译信息
+	RegisterTagTranslator(tag string, msg string) error           // 注册标签对应的翻译信息
 }
 
-func registerTranslator(v *validator.Validate, language string) *validator.Validate {
-	zhTrans := zh.New()
-	enTrans := en.New()
-	uni := ut.New(zhTrans, enTrans)
-	trans, _ := uni.GetTranslator(language)
-	// 不用考虑为空情况，不符合zh，en时会默认返回第一个fallback，即zhTrans
-	switch language {
-	case "zh":
-		_ = zhTranslations.RegisterDefaultTranslations(v, trans)
-	case "en":
-		_ = enTranslations.RegisterDefaultTranslations(v, trans)
+// RegisterFunc 注册函数
+type RegisterFunc func(fl validator.FieldLevel) bool
+
+type ValidationsErrors struct {
+	trans ut.Translator
+	errs  validator.ValidationErrors
+}
+
+func (v ValidationsErrors) Error() string {
+	translations := v.errs.Translate(v.trans)
+	errBuf := bytes.NewBufferString("")
+	for _, v := range translations {
+		errBuf.WriteString(v)
+		errBuf.WriteString(",")
 	}
-	return v
-}
-
-func registerTagNameFunc(v *validator.Validate, tagName string) {
-	v.RegisterTagNameFunc(func(field reflect.StructField) string {
-		return field.Tag.Get(tagName)
-	})
-}
-
-func Struct(data interface{}) error {
-	return v.Struct(data)
-}
-
-func StructCtx(ctx context.Context, data interface{}) error {
-	return v.StructCtx(ctx, data)
+	errBuf.Truncate(errBuf.Len() - 1)
+	return errBuf.String()
 }

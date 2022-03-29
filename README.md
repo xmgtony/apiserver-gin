@@ -10,6 +10,10 @@
 按照依赖注入，面向对象编程思想，开闭原则，可拓展，可测性等原则来规划项目。
 
 ### 更新日志
+
+***2022-03-29：校验器validator支持中文，支持自定义标签，替换了gin默认validator实现，不用每次校验错误后，再翻译成中文，根据配置直接返回中文提示信息，api接口不用处理error翻译。  
+具体实现查看pkg/validator包，接口演示查看登录接口。[详细使用文档-点这里](https://github.com/xmgtony/apiserver-gin/blob/master/docs/quick_start.md)***
+
 ***2022-03-15：实现日志requestId等透传，使用示例 pkg/log/log_test.go***
 
 ***2022-03-11：wire依赖注入工具引入，升级jwt组件。***
@@ -47,3 +51,8 @@ make clean
 - 其他一些坑，后续会出一系列配置与使用教程。
 
 #### [使用文档-点这里](https://github.com/xmgtony/apiserver-gin/blob/master/docs/quick_start.md)
+
+### 特别感谢JetBrains对开源项目支持
+<a href="https://jb.gg/OpenSourceSupport">
+  <img src="https://user-images.githubusercontent.com/8643542/160519107-199319dc-e1cf-4079-94b7-01b6b8d23aa6.png" align="left" height="100" width="100"  alt="JetBrains">
+</a>
