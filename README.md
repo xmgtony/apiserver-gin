@@ -15,6 +15,8 @@
 
 ### 更新日志
 
+*2022-04-01：拆分中间件和路由，不放在一起，便于团队开发时多人维护，比如用户模块的开发人员维护user_router.go，商品模块人员维护goods_router.go互相不影响，便于拓展，详情参考cmd/wire.go*
+
 *2022-03-29：校验器validator支持中文，支持自定义标签，替换了gin默认validator实现，不用每次校验错误后，再翻译成中文，根据配置直接返回中文提示信息，api接口不用处理error翻译。  
 具体实现查看pkg/validator包，接口演示查看登录接口。[详细使用文档-点这里](https://github.com/xmgtony/apiserver-gin/blob/master/docs/quick_start.md)*
 
