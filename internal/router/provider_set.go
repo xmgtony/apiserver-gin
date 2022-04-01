@@ -10,7 +10,7 @@ import (
 	"github.com/google/wire"
 )
 
-var ProviderSet = wire.NewSet(
-	NewRouter,
-	wire.Bind(new(server.Router), new(*router)),
+var UserRouterProviderSet = wire.NewSet(
+	NewUserRouter,
+	wire.Bind(new(server.Router), new(*userRouter)),
 )
