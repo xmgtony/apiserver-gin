@@ -5,7 +5,7 @@
 package errors
 
 import (
-	code2 "apiserver-gin/pkg/errors/code"
+	code2 "apiserver-gin/pkg/errors/ecode"
 	"errors"
 	"testing"
 )

@@ -8,10 +8,10 @@ import (
 
 // userRouter Router路由接口的默认实现
 type userRouter struct {
-	uh *user.UserHandler
+	uh *user.handler
 }
 
-func NewUserRouter(_uh *user.UserHandler) *userRouter {
+func NewUserRouter(_uh *user.handler) *userRouter {
 	return &userRouter{
 		uh: _uh,
 	}

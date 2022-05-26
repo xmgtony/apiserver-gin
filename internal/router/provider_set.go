@@ -14,3 +14,8 @@ var UserRouterProviderSet = wire.NewSet(
 	NewUserRouter,
 	wire.Bind(new(server.Router), new(*userRouter)),
 )
+
+var AccountBillProviderSet = wire.NewSet(
+	NewAccountBillRouter,
+	wire.Bind(new(server.Router), new(*accountBillRouter)),
+)

@@ -3,8 +3,15 @@
 // email xmgtony@gmail.com
 // description user handler层ProviderSet
 
-package user
+package v1
 
-import "github.com/google/wire"
+import (
+	"apiserver-gin/internal/handler/v1/accountbill"
+	"apiserver-gin/internal/handler/v1/user"
+	"github.com/google/wire"
+)
 
-var ProviderSet = wire.NewSet(NewUserHandler)
+var ProviderSet = wire.NewSet(
+	user.NewUserHandler,
+	accountbill.NewAccountBillHandler,
+)

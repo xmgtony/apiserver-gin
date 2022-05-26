@@ -13,4 +13,6 @@ import (
 var ProviderSet = wire.NewSet(
 	NewUserRepo,
 	wire.Bind(new(repo.UserRepo), new(*userRepo)),
+	NewAccountBillRepo,
+	wire.Bind(new(repo.AccountBillRepo), new(*accountBillRepo)),
 )

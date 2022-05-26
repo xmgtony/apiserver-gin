@@ -1,7 +1,7 @@
 package errors
 
 import (
-	"apiserver-gin/pkg/errors/code"
+	"apiserver-gin/pkg/errors/ecode"
 	"errors"
 	"fmt"
 	"strconv"
@@ -108,11 +108,11 @@ func WithCode(code int, msg string) *bizErrWithCode {
 // DecodeErr 用来解err，将err还原为 code和message
 func DecodeErr(err error) (int, string) {
 	if err == nil {
-		return code.Success, "success"
+		return ecode.Success, "success"
 	}
 	var b *bizErrWithCode
 	if errors.As(err, &b) {
 		return b.code, b.GetMsg()
 	}
-	return code.Unknown, err.Error()
+	return ecode.Unknown, err.Error()
 }

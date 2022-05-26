@@ -25,12 +25,12 @@ func getRouters(ds db.IDataSource) []server.Router {
 	rts = append(rts, middleware.NewMiddleware()) // 加载中间件及公共路由
 	urt := initRouter(ds)                         // 初始化用户路由
 	if urt != nil {
-		rts = append(rts, urt)
+		rts = append(rts, urt...)
 	}
 	return rts
 }
 
-func initRouter(ds db.IDataSource) server.Router {
+func initRouter(ds db.IDataSource) []server.Router {
 	// 如果你有其他路由，比如商品，可以继续添加在参数后面，每个项目组维护自己的router文件
 	// 类似 user_router.go  product_router.go 等，然后把wire需要的参数添加都下面
 	// 这样公共改动点（initRouter）很容易暴露出去，被代码审核人员发现

@@ -9,7 +9,7 @@ import (
 	"apiserver-gin/internal/model"
 	"apiserver-gin/internal/repo"
 	"apiserver-gin/pkg/errors"
-	"apiserver-gin/pkg/errors/code"
+	"apiserver-gin/pkg/errors/ecode"
 	"context"
 )
 
@@ -37,7 +37,7 @@ func NewUserService(_ur repo.UserRepo) *userService {
 // GetByName 通过用户名 查找用户
 func (us *userService) GetByName(ctx context.Context, name string) (*model.User, error) {
 	if len(name) == 0 {
-		return nil, errors.WithCode(code.ValidateErr, "用户名称不能为空")
+		return nil, errors.WithCode(ecode.ValidateErr, "用户名称不能为空")
 	}
 	return us.ur.GetUserByName(ctx, name)
 }

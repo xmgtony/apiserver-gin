@@ -3,7 +3,7 @@ package response
 import (
 	"apiserver-gin/pkg/constant"
 	"apiserver-gin/pkg/errors"
-	"apiserver-gin/pkg/errors/code"
+	"apiserver-gin/pkg/errors/ecode"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -23,7 +23,7 @@ func JSON(c *gin.Context, err error, data interface{}) {
 	// 如果code != 0, 失败的话 返回http状态码400（一般也可以全部返回200）
 	// 返回400 更严谨一些，个人接触的项目中大部分都是400。
 	var httpStatus int
-	if errCode != code.Success {
+	if errCode != ecode.Success {
 		httpStatus = http.StatusBadRequest
 	} else {
 		httpStatus = http.StatusOK
