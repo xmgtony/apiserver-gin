@@ -9,7 +9,7 @@
 package main
 
 import (
-	"apiserver-gin/internal/handler/v1/user"
+	handlerV1 "apiserver-gin/internal/handler/v1"
 	"apiserver-gin/internal/middleware"
 	"apiserver-gin/internal/repo/mysql"
 	"apiserver-gin/internal/router"
@@ -37,8 +37,9 @@ func initRouter(ds db.IDataSource) server.Router {
 	wire.Build(
 		mysql.ProviderSet,
 		service.ProviderSet,
-		user.ProviderSet,
+		handlerV1.ProviderSet,
 		router.UserRouterProviderSet,
+		router.AccountBillProviderSet,
 	)
 	return nil
 }
