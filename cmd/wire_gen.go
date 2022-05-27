@@ -7,6 +7,7 @@
 package main
 
 import (
+	"apiserver-gin/internal/handler/v1/accountbill"
 	"apiserver-gin/internal/handler/v1/user"
 	"apiserver-gin/internal/middleware"
 	"apiserver-gin/internal/repo/mysql"
@@ -18,12 +19,20 @@ import (
 
 // Injectors from wire.go:
 
-func initRouter(ds db.IDataSource) server.Router {
+func initUserRouter(ds db.IDataSource) server.Router {
 	userRepo := mysql.NewUserRepo(ds)
 	userService := service.NewUserService(userRepo)
-	userHandler := user.NewUserHandler(userService)
-	userRouter := router.NewUserRouter(userHandler)
+	handler := user.NewUserHandler(userService)
+	userRouter := router.NewUserRouter(handler)
 	return userRouter
+}
+
+func initAccountBillRouter(ds db.IDataSource) server.Router {
+	accountBillRepo := mysql.NewAccountBillRepo(ds)
+	accountBillService := service.NewAccountBillService(accountBillRepo)
+	handler := accountbill.NewAccountBillHandler(accountBillService)
+	accountBillRouter := router.NewAccountBillRouter(handler)
+	return accountBillRouter
 }
 
 // wire.go:
@@ -32,9 +41,13 @@ func initRouter(ds db.IDataSource) server.Router {
 func getRouters(ds db.IDataSource) []server.Router {
 	rts := make([]server.Router, 0)
 	rts = append(rts, middleware.NewMiddleware())
-	urt := initRouter(ds)
-	if urt != nil {
-		rts = append(rts, urt)
+	ur := initUserRouter(ds)
+	if ur != nil {
+		rts = append(rts, ur)
+	}
+	abr := initAccountBillRouter(ds)
+	if abr != nil {
+		rts = append(rts, abr)
 	}
 	return rts
 }

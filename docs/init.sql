@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `account_bill`
     `remark`          tinytext comment '备注说明',
     `enabled_status`  tinyint          not null default 1 comment '有效状态，1正常、0无效',
     `created`         datetime         not null default CURRENT_TIMESTAMP comment '用户创建时间',
-    `modified`        timestamp on update CURRENT_TIMESTAMP comment '用户修改时间',
+    `modified`        timestamp default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP comment '用户修改时间 ',
     index idx_user_id (`user_id`)
 ) engine = InnoDB
   charset = utf8 comment '账目清单';

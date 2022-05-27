@@ -32,7 +32,7 @@ func NewAccountBillService(_abr repo.AccountBillRepo) *accountBillService {
 }
 
 func (abs *accountBillService) Save(ctx context.Context, bill *model.AccountBill) error {
-	if nil == nil {
+	if nil == bill {
 		return errors.New("需要保存的账目清单信息不能为空")
 	}
 	return abs.abr.Save(ctx, bill)

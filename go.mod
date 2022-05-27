@@ -18,6 +18,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/pkg/errors v0.8.1 // indirect
 	github.com/satori/go.uuid v1.2.0
+	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/spf13/viper v1.5.0
 	github.com/ugorji/go v1.2.6 // indirect
 	go.uber.org/zap v1.10.0

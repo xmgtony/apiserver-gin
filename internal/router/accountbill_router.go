@@ -13,10 +13,10 @@ import (
 
 // accountBillRouter 账目清单router
 type accountBillRouter struct {
-	abh *accountbill.handler
+	abh *accountbill.Handler
 }
 
-func NewAccountBillRouter(_abh *accountbill.handler) *accountBillRouter {
+func NewAccountBillRouter(_abh *accountbill.Handler) *accountBillRouter {
 	return &accountBillRouter{
 		abh: _abh,
 	}

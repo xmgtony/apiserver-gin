@@ -14,6 +14,8 @@ import (
 	"apiserver-gin/pkg/response"
 	jtime "apiserver-gin/pkg/time"
 	"github.com/gin-gonic/gin"
+	"github.com/shopspring/decimal"
+	"strings"
 	"time"
 )
 
@@ -37,23 +39,34 @@ func (abh *Handler) AddAccountBill() gin.HandlerFunc {
 			return
 		}
 		uid := c.GetInt64(constant.UserID)
+		amd, err := decimal.NewFromString(addAccountBillReq.Amount)
+		if err != nil {
+			response.JSON(c, errors.Wrap(err, ecode.ValidateErr, "金额必须为有效数字"), nil)
+			return
+		}
+		if amd.IsNegative() {
+			response.JSON(c, errors.Wrap(err, ecode.ValidateErr, "金额必须为正数"), nil)
+			return
+		}
+		strings.SplitN(addAccountBillReq.Amount, ",", 2)
+		amount := amd.Mul(decimal.NewFromInt32(100)).IntPart()
 		// 组织model信息
 		accountBill := model.AccountBill{
 			UserId:         uint64(uid),
 			BillDate:       time.Time(addAccountBillReq.BillDate),
 			OriginIncident: addAccountBillReq.OriginIncident,
-			Amount:         0,
-			Relation:       "",
-			ToName:         "",
-			IsFollow:       0,
-			Remark:         "",
+			Amount:         uint(amount),
+			Relation:       addAccountBillReq.Relation,
+			ToName:         addAccountBillReq.ToName,
+			IsFollow:       addAccountBillReq.IsFollow,
+			Remark:         addAccountBillReq.Remark,
 		}
-		err := abh.accountBillServ.Save(c, &accountBill)
+		err = abh.accountBillServ.Save(c, &accountBill)
 		if err != nil {
 			response.JSON(c, errors.Wrap(err, ecode.RecordCreateErr, "保存账目清单信息失败"), nil)
 			return
 		}
-		response.JSON(c, nil, accountBill)
+		response.JSON(c, nil, nil)
 	}
 }
 
@@ -68,14 +81,18 @@ func (abh *Handler) GetAccountBillList() gin.HandlerFunc {
 		}
 		respBills := make([]model.AccountBillResp, 0)
 		for _, bill := range bills {
+			// 使用BigDecimal做精确运算，避免丢失精度
+			amountStr := decimal.NewFromInt32(int32(bill.Amount)).
+				Div(decimal.NewFromInt32(100)).StringFixed(2)
+
 			respBill := model.AccountBillResp{
 				BillDate:       jtime.JsonTime(bill.BillDate),
 				OriginIncident: bill.OriginIncident,
-				Amount:         "0.00",
-				Relation:       "",
-				ToName:         "",
-				IsFollow:       0,
-				Remark:         "",
+				Amount:         amountStr,
+				Relation:       bill.Relation,
+				ToName:         bill.ToName,
+				IsFollow:       bill.IsFollow,
+				Remark:         bill.Remark,
 			}
 			respBills = append(respBills, respBill)
 		}
