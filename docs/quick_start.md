@@ -162,4 +162,48 @@ curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkI
 }
 ```
 
+使用记账小程序模拟接口（演示用，不代表业务合理性）
+```shell
+curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpc3MiOiJhcGlzZXJ2ZXItZ2luIiwiZXhwIjoxNjQ4MjE4ODQ5LCJpYXQiOjE2NDc2MTQwNDl9.0dCx7ciHipYYUWlTmGxvUQpTp0vf79XRp5kQWQJTz04" \
+-X POST -d '{
+    "bill_date": "2022-05-24 00:00:00",
+    "origin_incident": "随礼出账",
+    "amount": "888.88",
+    "relation": "同事",
+    "to_name": "小张",
+    "is_follow": 1,
+    "remark": "关系不铁，希望尽快回礼"
+}'  http://localhost:8080/v1/accountBill
+
+{
+    "request_id": "085929e4a75043bd",
+    "err_code": 0,
+    "message": "success"
+}
+```
+
+保存成功后查询记账信息
+```shell
+curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpc3MiOiJhcGlzZXJ2ZXItZ2luIiwiZXhwIjoxNjQ4MjE4ODQ5LCJpYXQiOjE2NDc2MTQwNDl9.0dCx7ciHipYYUWlTmGxvUQpTp0vf79XRp5kQWQJTz04" http://localhost:8080/v1/accountBill/list 
+
+{
+    "request_id": "1bcca01142a94bf7",
+    "err_code": 0,
+    "message": "success",
+    "data": [
+        {
+            "bill_date": "2022-05-24 00:00:00",
+            "origin_incident": "随礼出账",
+            "amount": "888.88",
+            "relation": "同事",
+            "to_name": "小张",
+            "is_follow": 1,
+            "remark": "关系不铁，希望尽快回礼"
+        }
+    ]
+}
+```
+
+**建议做以上接口测试使用postman等可视化工具，书写文档传图不变，才使用curl演示**
+
 #### 后续会推出相关教程，介绍设计理念，以及在实际企业中的开发规范。
