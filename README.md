@@ -11,6 +11,8 @@
 
 ### 更新日志
 
+***2022-05-27：添加新的演示功能，用户记账，用于演示脚手架多个router，handler，service的使用，详情见使用文档，升级viper版本，解决依赖安全问题。 
+
 ***2022-03-29：校验器validator支持中文，支持自定义标签，替换了gin默认validator实现，不用每次校验错误后，再翻译成中文，根据配置直接返回中文提示信息，api接口不用处理error翻译。  
 具体实现查看pkg/validator包，接口演示查看登录接口。[详细使用文档-点这里](https://github.com/xmgtony/apiserver-gin/blob/master/docs/quick_start.md)***
 
