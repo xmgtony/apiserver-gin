@@ -27,7 +27,7 @@ database:
 log:
   level: debug
   file-name: web-server.log
-  time-format: 2006-01-02 15:04:05.000
+  time-format: '2006-01-02 15:04:05.000'
   max-size: 500 #单个日志文件大小MB
   max-backups: 7
   max-age: 7 #Days
