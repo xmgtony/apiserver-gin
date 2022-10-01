@@ -29,8 +29,8 @@ log:
   file-name: web-server.log
   time-format: '2006-01-02 15:04:05.000'
   max-size: 500 #单个日志文件大小MB
-  max-backups: 7
-  max-age: 7 #Days
+  max-backups: 7 #至多保留多少个日志文件
+  max-age: 7 #至多保留多少天的日志文件
   compress: true
   local-time: false
   console: true  #是否打印到控制台,true打印到控制台，false记录到文件
