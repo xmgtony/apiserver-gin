@@ -49,14 +49,14 @@ func (d *defaultMysqlDataSource) Close() {
 	if d.master != nil {
 		m, err := d.master.DB()
 		if err != nil {
-			m.Close()
+			_ = m.Close()
 		}
 	}
 	// 关闭从库链接
 	if d.slave != nil {
 		s, err := d.slave.DB()
 		if err != nil {
-			s.Close()
+			_ = s.Close()
 		}
 	}
 }
