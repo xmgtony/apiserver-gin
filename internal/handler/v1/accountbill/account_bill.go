@@ -12,11 +12,9 @@ import (
 	"apiserver-gin/pkg/errors"
 	"apiserver-gin/pkg/errors/ecode"
 	"apiserver-gin/pkg/response"
-	jtime "apiserver-gin/pkg/time"
 	"github.com/gin-gonic/gin"
 	"github.com/shopspring/decimal"
 	"strings"
-	"time"
 )
 
 // Handler 账目清单handler，从分层来讲，这里已经是最外层，只要提供实例在router中使用
@@ -51,16 +49,7 @@ func (abh *Handler) AddAccountBill() gin.HandlerFunc {
 		strings.SplitN(addAccountBillReq.Amount, ",", 2)
 		amount := amd.Mul(decimal.NewFromInt32(100)).IntPart()
 		// 组织model信息
-		accountBill := model.AccountBill{
-			UserId:         uint64(uid),
-			BillDate:       time.Time(addAccountBillReq.BillDate),
-			OriginIncident: addAccountBillReq.OriginIncident,
-			Amount:         uint(amount),
-			Relation:       addAccountBillReq.Relation,
-			ToName:         addAccountBillReq.ToName,
-			IsFollow:       addAccountBillReq.IsFollow,
-			Remark:         addAccountBillReq.Remark,
-		}
+		accountBill := addAccountBillReq.ToAccountBill(uint64(uid), uint(amount))
 		err = abh.accountBillServ.Save(c, &accountBill)
 		if err != nil {
 			response.JSON(c, errors.Wrap(err, ecode.RecordCreateErr, "保存账目清单信息失败"), nil)
@@ -81,20 +70,7 @@ func (abh *Handler) GetAccountBillList() gin.HandlerFunc {
 		}
 		respBills := make([]model.AccountBillResp, 0)
 		for _, bill := range bills {
-			// 使用BigDecimal做精确运算，避免丢失精度
-			amountStr := decimal.NewFromInt32(int32(bill.Amount)).
-				Div(decimal.NewFromInt32(100)).StringFixed(2)
-
-			respBill := model.AccountBillResp{
-				BillDate:       jtime.JsonTime(bill.BillDate),
-				OriginIncident: bill.OriginIncident,
-				Amount:         amountStr,
-				Relation:       bill.Relation,
-				ToName:         bill.ToName,
-				IsFollow:       bill.IsFollow,
-				Remark:         bill.Remark,
-			}
-			respBills = append(respBills, respBill)
+			respBills = append(respBills, bill.ToAccountBillResp())
 		}
 		response.JSON(c, nil, respBills)
 		return
