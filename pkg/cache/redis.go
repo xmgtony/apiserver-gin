@@ -9,7 +9,7 @@ import (
 
 var redisClient *redis.Client
 
-// 初始化redisClient
+// InitRedis 初始化redisClient
 func InitRedis(config config.Config) {
 	redisCfg := config.RedisConfig
 	redisClient = redis.NewClient(&redis.Options{
@@ -26,10 +26,17 @@ func InitRedis(config config.Config) {
 	}
 }
 
+// GetRedisClient 获取redis client
 func GetRedisClient() *redis.Client {
+	if nil == redisClient {
+		panic("Please initialize the Redis client first!")
+	}
 	return redisClient
 }
 
+// CloseRedis 关闭redis client
 func CloseRedis() {
-	_ = redisClient.Close()
+	if nil != redisClient {
+		_ = redisClient.Close()
+	}
 }
