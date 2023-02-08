@@ -66,7 +66,7 @@ func ResolveAppOptions(opt *AppOptions) {
 
 // Run server的启动入口
 // 加载路由, 启动服务
-func (s HttpServer) Run(rs ...Router) {
+func (s *HttpServer) Run(rs ...Router) {
 	var wg sync.WaitGroup
 	wg.Add(1)
 	// 设置gin启动模式，必须在创建gin实例之前
