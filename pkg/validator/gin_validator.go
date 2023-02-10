@@ -77,15 +77,15 @@ func (v *customGinValidator) ValidateStruct(obj interface{}) error {
 
 // validateStruct receives struct type
 func (v *customGinValidator) validateStruct(obj interface{}) error {
-	v.lazyinit(v.language)
+	v.lazyInit(v.language)
 	return v.validate.ValidStruct(obj)
 }
 
 func (v *customGinValidator) Engine() interface{} {
-	v.lazyinit(v.language)
+	v.lazyInit(v.language)
 	return v.validate.ValidatorEngine()
 }
 
-func (v *customGinValidator) lazyinit(language string) {
+func (v *customGinValidator) lazyInit(language string) {
 	v.validate = Init(language)
 }
