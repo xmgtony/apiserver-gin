@@ -6,8 +6,10 @@ package middleware
 
 import (
 	"apiserver-gin/internal/handler/ping"
+	"apiserver-gin/pkg/errors"
+	"apiserver-gin/pkg/errors/ecode"
+	"apiserver-gin/pkg/response"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 // middleware 实现Router接口
@@ -31,7 +33,7 @@ func (m *middleware) Load(g *gin.Engine) {
 	g.Use(Logger)
 	// 404
 	g.NoRoute(func(c *gin.Context) {
-		c.JSON(http.StatusNotFound, "404 not found!")
+		response.JSON(c, errors.WithCode(ecode.NotFoundErr, "404 not found!"), nil)
 	})
 	// ping server
 	g.GET("/ping", ping.Ping())
