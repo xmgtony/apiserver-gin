@@ -24,7 +24,7 @@ type AccountBill struct {
 	Remark         string    `gorm:"column:remark" json:"remark"`                   // 备注说明 	// 用户修改时间
 }
 
-func (m *AccountBill) TableName() string {
+func (m AccountBill) TableName() string {
 	return "account_bill"
 }
 

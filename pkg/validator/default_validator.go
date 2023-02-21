@@ -97,7 +97,7 @@ func (d *defaultValidator) ValidatorEngine() *validator.Validate {
 }
 
 // RegisterValidation 注册自定义标签校验器，并且注册校验器对应的提示信息。
-// 否则只有自定义校验器，但是没有对应中文提示很不友好
+// 否则只有自定义校验器，但是没有对应中文提示很不友好，翻译只能翻译预设的标签，自定义标签需要自己添加提示消息。
 func (d *defaultValidator) RegisterValidation(tagName, Msg string, f RegisterFunc) error {
 	if err := d.v.RegisterValidation(tagName, validator.Func(f)); err != nil {
 		return err
