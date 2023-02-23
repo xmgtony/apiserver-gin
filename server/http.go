@@ -15,6 +15,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"sync"
 	"syscall"
 	"time"
@@ -135,10 +136,16 @@ func (s *HttpServer) RegisterOnShutdown(_f func()) {
 // Ping 用来检查是否程序正常启动
 func Ping(port string, maxCount int) error {
 	seconds := 1
-	url := "http://127.0.0.1" + port + "/ping"
+	if len(port) == 0 {
+		panic("Please specify the service port")
+	}
+	if !strings.HasPrefix(port, ":") {
+		port += ":"
+	}
+	url := fmt.Sprintf("http://localhost%s/ping", port)
 	for i := 0; i < maxCount; i++ {
 		resp, err := http.Get(url)
-		if err == nil && resp != nil && resp.StatusCode == http.StatusOK {
+		if nil == err && resp != nil && resp.StatusCode == http.StatusOK {
 			return nil
 		}
 		log.Infof("等待服务在线, 已等待 %d 秒，最多等待 %d 秒", seconds, maxCount)
