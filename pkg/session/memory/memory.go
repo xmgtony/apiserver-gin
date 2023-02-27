@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// 每个session的内容的存储位置
+// MemoryStore 每个session的内容的存储位置
 type MemoryStore struct {
 	sid            string                      //session id
 	lastAccessTime time.Time                   //session的最后访问时间
@@ -43,7 +43,7 @@ func (m *MemoryStore) GetSessionId() string {
 	return m.sid
 }
 
-// 保存每一个session
+// MemoryProvider 保存每一个session
 type MemoryProvider struct {
 	sessions map[interface{}]*list.Element
 	gclist   *list.List
@@ -102,7 +102,7 @@ func (p *MemoryProvider) SessionGC(maxLifeTime int64) {
 	}
 }
 
-// 每次读session更新session最后访问时间
+// UpdateSessionLifeTime 每次读session更新session最后访问时间
 func (p *MemoryProvider) UpdateSessionLifeTime(e *list.Element) {
 	e.Value.(*MemoryStore).lastAccessTime = time.Now()
 	p.gclist.MoveToFront(e)

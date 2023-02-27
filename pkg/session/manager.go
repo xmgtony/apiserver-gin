@@ -11,7 +11,7 @@ import (
 )
 
 type Manager struct {
-	sessionName string // 存储在客户端的sessionid的key, 比如gsession
+	sessionName string // 存储在客户端的sessionId的key, 比如gsession
 
 	provider Provider // 存储接口
 
@@ -40,7 +40,7 @@ func (m *Manager) sessionId() string {
 	return base64.URLEncoding.EncodeToString(b)
 }
 
-// Session用来获取或者初始化session
+// Session 用来获取或者初始化session
 func (m *Manager) Session(w http.ResponseWriter, r *http.Request) (session Session) {
 	m.lock.Lock()
 	defer m.lock.Unlock()
@@ -68,7 +68,7 @@ func (m *Manager) Session(w http.ResponseWriter, r *http.Request) (session Sessi
 	return
 }
 
-//SessionDestroy 销毁session, 设置客户端过期
+// SessionDestroy 销毁session, 设置客户端过期
 func (m *Manager) SessionDestroy(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie(m.sessionName)
 	if err != nil || cookie.Value == "" {
