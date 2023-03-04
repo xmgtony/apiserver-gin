@@ -10,7 +10,6 @@ package main
 
 import (
 	handlerV1 "apiserver-gin/internal/handler/v1"
-	"apiserver-gin/internal/middleware"
 	"apiserver-gin/internal/repo/mysql"
 	"apiserver-gin/internal/router"
 	"apiserver-gin/internal/service"
@@ -19,34 +18,13 @@ import (
 	"github.com/google/wire"
 )
 
-// getRouters 获取所有的router
-func getRouters(ds db.IDataSource) []server.Router {
-	rts := make([]server.Router, 0)
-	// 加载中间件及路由, 注意需要先加载中间件
-	rts = append(rts,
-		middleware.NewMiddleware(),
-		buildUserRouter(ds),
-		buildAccountBillRouter(ds),
+// initRouter 初始化router
+func initRouter(ds db.IDataSource) server.Router {
+	wire.Build(
+		providerSet,
+		router.ApiRouterProviderSet,
 	)
-	return rts
+	return nil
 }
 
 var providerSet = wire.NewSet(mysql.ProviderSet, service.ProviderSet, handlerV1.ProviderSet)
-
-// buildUserRouter 组装UserRouter
-func buildUserRouter(ds db.IDataSource) server.Router {
-	wire.Build(
-		providerSet,
-		router.UserRouterProviderSet,
-	)
-	return nil
-}
-
-// buildAccountBillRouter 组装AccountBillRouter
-func buildAccountBillRouter(ds db.IDataSource) server.Router {
-	wire.Build(
-		providerSet,
-		router.AccountBillRouterProviderSet,
-	)
-	return nil
-}

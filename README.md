@@ -1,6 +1,3 @@
-## 下一步计划
-将本项目打造成快速开发框架，目前Java方向的快速开发框架非常多，包含完成度很高的管理后台、代码生成、组件集成等。但是Go方向相对较少，要么有但是很多按照PHP的玩法在做，因此后续规划为快速开发框架，会新起一个项目或者分支，在当前代码的基础上拓展。
-
 ### apiserver-gin
 
 基于gin的api服务端脚手架。 gin在Go web开发中是相当受欢迎的，但是gin也是一个轻量级web框架，并不能像其他语言比如java的spring框架具有丰富的生态和标准，在实际开发中需要自己设计和添加一些额外的能力，来完善应用，比如：request_id透传，依赖注入，日志打印分割，session管理，全局错误处理，编译打包等等。
@@ -9,14 +6,18 @@
 
 布局参考[project-layout](https://github.com/golang-standards/project-layout)，该项目非Go官方标准，但是已经是行业主流。
 
-
 ### 理论基础
+
 #### 清洁架构 [(Robert C. Martin)](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+
 ![image](https://user-images.githubusercontent.com/8643542/159397149-17f58fba-a3c0-4874-b49a-ae724989af59.png)
 
 按照依赖注入，面向对象编程思想，开闭原则，可拓展，可测性等原则来规划项目。
 
 ### 更新日志
+
+*2023-03-04：调整依赖注入wire.go实现，wire解决复杂依赖较为困难，每次对代码有破坏性更改，改为使用传参解决。*
+
 *2022-05-27：添加新的演示功能，用户记账，用于演示脚手架多个router，handler，service的使用，详情见使用文档，升级viper版本，解决依赖安全问题。*
 
 *2022-04-01：拆分中间件和路由，不放在一起，便于团队开发时多人维护，比如用户模块的开发人员维护user_router.go，商品模块人员维护goods_router.go互相不影响，便于拓展，详情参考cmd/wire.go*

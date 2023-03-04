@@ -1,6 +1,7 @@
 package main
 
 import (
+	"apiserver-gin/internal/middleware"
 	"apiserver-gin/pkg/config"
 	"apiserver-gin/pkg/db"
 	"apiserver-gin/pkg/log"
@@ -26,6 +27,6 @@ func main() {
 			ds.Close()
 		}
 	})
-	routers := getRouters(ds)
-	srv.Run(routers...)
+	router := initRouter(ds)
+	srv.Run(middleware.NewMiddleware(), router)
 }

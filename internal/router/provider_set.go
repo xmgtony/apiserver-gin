@@ -10,12 +10,7 @@ import (
 	"github.com/google/wire"
 )
 
-var UserRouterProviderSet = wire.NewSet(
-	NewUserRouter,
-	wire.Bind(new(server.Router), new(*userRouter)),
-)
-
-var AccountBillRouterProviderSet = wire.NewSet(
-	NewAccountBillRouter,
-	wire.Bind(new(server.Router), new(*accountBillRouter)),
+var ApiRouterProviderSet = wire.NewSet(
+	NewApiRouter,
+	wire.Bind(new(server.Router), new(*ApiRouter)),
 )
