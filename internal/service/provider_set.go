@@ -12,4 +12,6 @@ var ProviderSet = wire.NewSet(
 	wire.Bind(new(UserService), new(*userService)),
 	NewAccountBillService,
 	wire.Bind(new(AccountBillService), new(*accountBillService)),
+	NewTxDemoService,
+	wire.Bind(new(TxDemoService), new(*txDemoService)),
 )

@@ -7,10 +7,13 @@ package mysql
 
 import (
 	"apiserver-gin/internal/repo"
+	"apiserver-gin/pkg/db"
 	"github.com/google/wire"
 )
 
 var ProviderSet = wire.NewSet(
+	NewTransaction,
+	wire.Bind(new(db.Transaction), new(*transaction)),
 	NewUserRepo,
 	wire.Bind(new(repo.UserRepo), new(*userRepo)),
 	NewAccountBillRepo,
