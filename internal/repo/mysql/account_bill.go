@@ -25,12 +25,12 @@ func NewAccountBillRepo(_ds db.IDataSource) *accountBillRepo {
 }
 
 func (ab *accountBillRepo) Save(ctx context.Context, bill *model.AccountBill) error {
-	return ab.ds.Master().Create(bill).Error
+	return ab.ds.Master(ctx).Create(bill).Error
 }
 
 func (ab *accountBillRepo) SelectListByUserId(ctx context.Context, userId int64) ([]model.AccountBill, error) {
 	var accountBills []model.AccountBill
-	err := ab.ds.Master().Where("user_id = ?", userId).Find(&accountBills).Error
+	err := ab.ds.Master(ctx).Where("user_id = ?", userId).Find(&accountBills).Error
 	if err != nil {
 		return nil, err
 	}
