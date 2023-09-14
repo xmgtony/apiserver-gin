@@ -10,8 +10,8 @@ require (
 	github.com/go-playground/validator/v10 v10.10.0
 	github.com/go-redis/redis/v8 v8.7.0
 	github.com/golang-jwt/jwt/v4 v4.2.0
+	github.com/google/uuid v1.3.1
 	github.com/google/wire v0.5.0
-	github.com/satori/go.uuid v1.2.0
 	github.com/shopspring/decimal v1.3.1
 	github.com/spf13/viper v1.12.0
 	go.uber.org/zap v1.17.0

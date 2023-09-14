@@ -13,8 +13,9 @@ func TestGenUUID(t *testing.T) {
 }
 
 func TestGenUUIDFromStr(t *testing.T) {
-	uuid, err := ParseUUIDFromStr(GenUUID())
-	if err != nil {
+	genUUID := GenUUID()
+	uuid, err := ParseUUIDFromStr(genUUID)
+	if err != nil || genUUID != uuid {
 		t.Fatal(err)
 	}
 	t.Log(uuid)
