@@ -24,7 +24,6 @@ func NewMiddleware() *middleware {
 // Load 注册中间件和公共路由
 func (m *middleware) Load(g *gin.Engine) {
 	// 注册中间件
-	g.Use(gin.Logger())
 	g.Use(gin.Recovery())
 	g.Use(NoCache())
 	g.Use(Options())
