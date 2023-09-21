@@ -10,6 +10,7 @@ import (
 	"apiserver-gin/pkg/log"
 	"apiserver-gin/pkg/validator"
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"net/http"
@@ -111,7 +112,7 @@ func (s *HttpServer) Run(rs ...Router) {
 
 	err := srv.ListenAndServe()
 	if err != nil {
-		if err != http.ErrServerClosed {
+		if !errors.Is(err, http.ErrServerClosed) {
 			log.Errorf("server start failed on port %s", s.config.Port)
 			return
 		}

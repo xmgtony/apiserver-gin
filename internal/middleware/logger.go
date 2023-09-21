@@ -4,8 +4,9 @@ import (
 	"apiserver-gin/pkg/constant"
 	"apiserver-gin/pkg/log"
 	"bytes"
+	"fmt"
 	"github.com/gin-gonic/gin"
-	"io/ioutil"
+	"io"
 	"time"
 )
 
@@ -17,13 +18,13 @@ func Logger(c *gin.Context) {
 	reqId := c.GetString(constant.RequestId)
 	method := c.Request.Method
 	ip := c.ClientIP()
-	requestBody, err := ioutil.ReadAll(c.Request.Body)
+	requestBody, err := io.ReadAll(c.Request.Body)
 	if err != nil {
 		requestBody = []byte{}
 	}
-	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(requestBody))
+	c.Request.Body = io.NopCloser(bytes.NewBuffer(requestBody))
 
-	log.Info("New request start",
+	log.Info(fmt.Sprintf("%s %s start", method, reqPath),
 		log.Pair(constant.RequestId, reqId),
 		log.Pair("host", ip),
 		log.Pair("host", ip),
@@ -34,7 +35,7 @@ func Logger(c *gin.Context) {
 	c.Next()
 	// 请求后
 	latency := time.Since(t)
-	log.Info("New request end",
+	log.Info(fmt.Sprintf("%s %s end", method, reqPath),
 		log.Pair(constant.RequestId, reqId),
 		log.Pair("host", ip),
 		log.Pair("path", reqPath),
