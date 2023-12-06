@@ -1,3 +1,5 @@
+// 作为中间层，即使底层log库更换，也不影响业务
+
 package log
 
 import (
@@ -166,15 +168,6 @@ func Error(message string, kvs ...DefaultPair) {
 	_logger.sugar.Errorw(message, args...)
 }
 
-// Panic 打印错误信息，然后panic
-func Panic(message string, kvs ...DefaultPair) {
-	if !_logger.EnabledLevel(zapcore.PanicLevel) {
-		return
-	}
-	args := spread(kvs...)
-	_logger.sugar.Panicw(message, args...)
-}
-
 // Fatal 打印错误信息，然后退出
 func Fatal(message string, kvs ...DefaultPair) {
 	if !_logger.EnabledLevel(zapcore.FatalLevel) {
@@ -184,37 +177,7 @@ func Fatal(message string, kvs ...DefaultPair) {
 	_logger.sugar.Fatalw(message, args...)
 }
 
-// Debugf 格式化输出debug级别日志
-func Debugf(template string, args ...interface{}) {
-	_logger.sugar.Debugf(template, args...)
-}
-
-// Infof 格式化输出info级别日志
-func Infof(template string, args ...interface{}) {
-	_logger.sugar.Infof(template, args...)
-}
-
-// Warnf 格式化输出warn级别日志
-func Warnf(template string, args ...interface{}) {
-	_logger.sugar.Warnf(template, args...)
-}
-
-// Errorf 格式化输出error级别日志
-func Errorf(template string, args ...interface{}) {
-	_logger.sugar.Errorf(template, args...)
-}
-
-// Panicf 格式化输出日志，并panic
-func Panicf(template string, args ...interface{}) {
-	_logger.sugar.Panicf(template, args...)
-}
-
-// Fatalf 格式化输出日志，并退出
-func Fatalf(template string, args ...interface{}) {
-	_logger.sugar.Fatalf(template, args...)
-}
-
-// tempLogger 临时的logger
+// tempLogger 临时的logger，作为链式调用中间变量
 type tempLogger struct {
 	extra []DefaultPair
 }
@@ -295,15 +258,6 @@ func (tl *tempLogger) Error(message string, kvs ...DefaultPair) {
 	_logger.sugar.Errorw(message, args...)
 }
 
-// Panic 打印错误信息，然后panic
-func (tl *tempLogger) Panic(message string, kvs ...DefaultPair) {
-	if !_logger.EnabledLevel(zapcore.PanicLevel) {
-		return
-	}
-	args := tl.getArgs(kvs)
-	_logger.sugar.Panicw(message, args...)
-}
-
 // Fatal 打印错误信息，然后退出
 func (tl *tempLogger) Fatal(message string, kvs ...DefaultPair) {
 	if !_logger.EnabledLevel(zapcore.FatalLevel) {
@@ -311,42 +265,6 @@ func (tl *tempLogger) Fatal(message string, kvs ...DefaultPair) {
 	}
 	args := tl.getArgs(kvs)
 	_logger.sugar.Fatalw(message, args...)
-}
-
-// Debugf 格式化输出debug级别日志
-func (tl *tempLogger) Debugf(template string, args ...interface{}) {
-	args, template = tl.getPrefix(template, args)
-	_logger.sugar.Debugf(template, args...)
-}
-
-// Infof 格式化输出info级别日志
-func (tl *tempLogger) Infof(template string, args ...interface{}) {
-	args, template = tl.getPrefix(template, args)
-	_logger.sugar.Infof(template, args...)
-}
-
-// Warnf 格式化输出warn级别日志
-func (tl *tempLogger) Warnf(template string, args ...interface{}) {
-	args, template = tl.getPrefix(template, args)
-	_logger.sugar.Warnf(template, args...)
-}
-
-// Errorf 格式化输出error级别日志
-func (tl *tempLogger) Errorf(template string, args ...interface{}) {
-	args, template = tl.getPrefix(template, args)
-	_logger.sugar.Errorf(template, args...)
-}
-
-// Panicf 格式化输出日志，并panic
-func (tl *tempLogger) Panicf(template string, args ...interface{}) {
-	args, template = tl.getPrefix(template, args)
-	_logger.sugar.Panicf(template, args...)
-}
-
-// Fatalf 格式化输出日志，并退出
-func (tl *tempLogger) Fatalf(template string, args ...interface{}) {
-	args, template = tl.getPrefix(template, args)
-	_logger.sugar.Fatalf(template, args...)
 }
 
 // Sync 关闭时需要同步日志到输出

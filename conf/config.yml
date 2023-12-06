@@ -33,5 +33,5 @@ log:
   max-age: 7 #至多保留多少天的日志文件
   compress: true
   local-time: false
-  console: true  #是否打印到控制台,true打印到控制台，false记录到文件
+  console: true  #是否打印到控制台,true打印到控制台，false记录到文件, 建议使用Docker时设置为true
 
