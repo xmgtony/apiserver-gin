@@ -1,4 +1,4 @@
-// author: maxf
+// author: xmgtony
 // date: 2020-09-28 16:10
 // version: 1.0
 // 通用server启动类，完成配置加载，缓存初始化，数据库初始化，启动参数绑定
@@ -83,7 +83,7 @@ func (s *HttpServer) Run(rs ...Router) {
 		if err := Ping(s.config.Port, s.config.MaxPingCount); err != nil {
 			log.Fatal("server no response")
 		}
-		log.Infof("server started success! port: %s", s.config.Port)
+		log.Info("server started success!", log.Pair("port", s.config.Port))
 	}()
 
 	srv := http.Server{
@@ -105,7 +105,7 @@ func (s *HttpServer) Run(rs ...Router) {
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
 		if err := srv.Shutdown(ctx); err != nil {
-			log.Errorf("server shutdown err %v \n", err)
+			log.Error("server shutdown error", log.Pair("error", err))
 		}
 		wg.Done()
 	}()
@@ -113,12 +113,12 @@ func (s *HttpServer) Run(rs ...Router) {
 	err := srv.ListenAndServe()
 	if err != nil {
 		if !errors.Is(err, http.ErrServerClosed) {
-			log.Errorf("server start failed on port %s", s.config.Port)
+			log.Error("server start failed!", log.Pair("port", s.config.Port))
 			return
 		}
 	}
 	wg.Wait()
-	log.Infof("server stop on port %s", s.config.Port)
+	log.Info("server stop on port!", log.Pair("port", s.config.Port))
 }
 
 // RouterLoad 加载自定义路由
@@ -149,7 +149,7 @@ func Ping(port string, maxCount int) error {
 		if nil == err && resp != nil && resp.StatusCode == http.StatusOK {
 			return nil
 		}
-		log.Infof("等待服务在线, 已等待 %d 秒，最多等待 %d 秒", seconds, maxCount)
+		log.Info(fmt.Sprintf("等待服务在线, 已等待 %d 秒，最多等待 %d 秒", seconds, maxCount))
 		time.Sleep(time.Second * 1)
 		seconds++
 	}
