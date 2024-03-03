@@ -1,8 +1,6 @@
 package middleware
 
 import (
-	"apiserver-gin/pkg/constant"
-	"apiserver-gin/tools/uuid"
 	"net/http"
 	"strings"
 	"time"
@@ -20,7 +18,7 @@ func NoCache() gin.HandlerFunc {
 	}
 }
 
-// Options
+// Options 客户端使用Options请求嗅探服务器支持情况
 func Options() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if strings.ToUpper(c.Request.Method) != "OPTIONS" {
@@ -46,18 +44,6 @@ func Secure() gin.HandlerFunc {
 		if c.Request.TLS != nil {
 			c.Header("Strict-Transport-Security", "max-age=31536000")
 		}
-		c.Next()
-	}
-}
-
-// RequestId 用来设置和透传requestId
-func RequestId() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		requestId := uuid.GenUUID16()
-		c.Header("X-Request-Id", requestId)
-
-		// 设置requestId到context中，便于后面调用链的透传
-		c.Set(constant.RequestId, requestId)
 		c.Next()
 	}
 }

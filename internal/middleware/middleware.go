@@ -6,6 +6,7 @@ package middleware
 
 import (
 	"apiserver-gin/internal/handler/ping"
+	"apiserver-gin/internal/middleware/trace"
 	"apiserver-gin/pkg/errors"
 	"apiserver-gin/pkg/errors/ecode"
 	"apiserver-gin/pkg/response"
@@ -28,8 +29,8 @@ func (m *middleware) Load(g *gin.Engine) {
 	g.Use(NoCache())
 	g.Use(Options())
 	g.Use(Secure())
-	g.Use(RequestId())
-	g.Use(Logger)
+	g.Use(trace.SetRequestId())
+	g.Use(ReqLogger)
 	// 404
 	g.NoRoute(func(c *gin.Context) {
 		response.JSON(c, errors.WithCode(ecode.NotFoundErr, "404 not found!"), nil)

@@ -83,7 +83,7 @@ func (s *HttpServer) Run(rs ...Router) {
 		if err := Ping(s.config.Port, s.config.MaxPingCount); err != nil {
 			log.Fatal("server no response")
 		}
-		log.Info("server started success!", log.Pair("port", s.config.Port))
+		log.Info("server started success!", "port", s.config.Port)
 	}()
 
 	srv := http.Server{
@@ -105,7 +105,7 @@ func (s *HttpServer) Run(rs ...Router) {
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
 		if err := srv.Shutdown(ctx); err != nil {
-			log.Error("server shutdown error", log.Pair("error", err))
+			log.Error("server shutdown error", "error", err)
 		}
 		wg.Done()
 	}()
@@ -113,12 +113,12 @@ func (s *HttpServer) Run(rs ...Router) {
 	err := srv.ListenAndServe()
 	if err != nil {
 		if !errors.Is(err, http.ErrServerClosed) {
-			log.Error("server start failed!", log.Pair("port", s.config.Port))
+			log.Error("server start failed!", "port", s.config.Port)
 			return
 		}
 	}
 	wg.Wait()
-	log.Info("server stop on port!", log.Pair("port", s.config.Port))
+	log.Info("server stop on port!", "port", s.config.Port)
 }
 
 // RouterLoad 加载自定义路由

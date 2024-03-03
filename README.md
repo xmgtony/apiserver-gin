@@ -16,6 +16,8 @@
 
 ### 更新日志
 
+*2024-03-02：日志重构，大量提高了性能，并且可以全局透传一些值，比如traceId。只需要使用log.WithCtx(ctx)即可, eg：internal/middleware/req_logger.go*
+
 *2023-06-29：增加事务支持，多个service方法可以放在一个事务里执行，使用方式参考 internal/service/tx_demo.go 文件。*
 
 *2023-03-04：调整依赖注入wire.go实现，wire解决复杂依赖较为困难，每次对代码有破坏性更改，改为使用传参解决。*
