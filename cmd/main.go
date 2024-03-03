@@ -2,6 +2,7 @@ package main
 
 import (
 	"apiserver-gin/internal/middleware"
+	"apiserver-gin/internal/middleware/trace"
 	"apiserver-gin/internal/repo/mysql"
 	"apiserver-gin/pkg/config"
 	"apiserver-gin/pkg/log"
@@ -18,7 +19,9 @@ func main() {
 	}
 	// 加载配置文件
 	c := config.Load(appOpt.ConfigFilePath)
-	log.InitLogger(&c.LogConfig, c.AppName) // 日志
+	log.InitLogger(&c.LogConfig,
+		log.WithOption("appName", c.AppName),
+		log.WithOption("requestId", trace.RequestId())) // 日志
 	defer log.Sync()
 
 	ds := mysql.NewDefaultMysql(c.DBConfig) // 创建数据库链接，使用默认的实现方式

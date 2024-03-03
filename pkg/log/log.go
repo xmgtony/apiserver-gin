@@ -21,27 +21,54 @@ var (
 )
 
 type logger struct {
-	cfg    *config.LogConfig
-	sugar  *zap.SugaredLogger
-	_level zapcore.Level
+	cfg      *config.LogConfig
+	sugar    *zap.SugaredLogger
+	_level   zapcore.Level
+	_ctx     context.Context
+	prefixes []Option // 公共打印前缀
+}
+
+type Valuer func(ctx context.Context) any
+
+type Option struct {
+	key string
+	val Valuer
+}
+
+// WithOption 设置日志打印的公共内容
+func WithOption(key string, val any) Option {
+	valuer, ok := val.(Valuer)
+	if !ok {
+		valuer = Valuer(func(ctx context.Context) any {
+			return val
+		})
+	}
+	return Option{key: key, val: valuer}
+}
+
+func WithCtx(ctx context.Context) *logger {
+	return &logger{cfg: _logger.cfg, sugar: _logger.sugar, _level: _logger._level, _ctx: ctx, prefixes: _logger.prefixes}
 }
 
 // InitLogger 初始化日志配置
-func InitLogger(_cfg *config.LogConfig, appName string) {
+func InitLogger(_cfg *config.LogConfig, options ...Option) {
 	once.Do(func() {
 		_logger = &logger{
-			cfg: _cfg,
+			cfg:  _cfg,
+			_ctx: context.Background(),
 		}
 		lumber := _logger.newLumber()
 		writeSyncer := zapcore.NewMultiWriteSyncer(zapcore.AddSync(lumber))
 		sugar := zap.New(_logger.newCore(writeSyncer),
 			zap.ErrorOutput(writeSyncer),
 			zap.AddCaller(),
-			zap.AddCallerSkip(1),
-			zap.Fields(zap.String("appName", appName))).
-			Sugar()
+			zap.AddCallerSkip(2)).Sugar()
 
 		_logger.sugar = sugar
+
+		if len(options) > 0 {
+			_logger.prefixes = options
+		}
 	})
 }
 
@@ -107,164 +134,91 @@ func (l *logger) newLumber() *lumberjack.Logger {
 	}
 }
 
-func (l *logger) EnabledLevel(level zapcore.Level) bool {
+func (l *logger) enabledLevel(level zapcore.Level) bool {
 	return level >= l._level
 }
 
-// DefaultPair 表示接收打印的键值对参数
-type DefaultPair struct {
-	key   string
-	value interface{}
-}
-
-func Pair(key string, v interface{}) DefaultPair {
-	return DefaultPair{
-		key:   key,
-		value: v,
+func (l *logger) log(level zapcore.Level, message string, kvs []any) {
+	if !_logger.enabledLevel(zapcore.DebugLevel) {
+		return
+	}
+	if hasValuers(l) {
+		allKvs := make([]any, 0, len(kvs)+len(l.prefixes))
+		for _, option := range l.prefixes {
+			allKvs = append(allKvs, option.key, option.val(l._ctx))
+		}
+		kvs = append(allKvs, kvs...)
+	}
+	switch level {
+	case zapcore.DebugLevel:
+		_logger.sugar.Debugw(message, kvs...)
+	case zapcore.InfoLevel:
+		_logger.sugar.Infow(message, kvs...)
+	case zapcore.WarnLevel:
+		_logger.sugar.Warnw(message, kvs...)
+	case zapcore.ErrorLevel:
+		_logger.sugar.Errorw(message, kvs...)
+	case zapcore.FatalLevel:
+		_logger.sugar.Fatalw(message, kvs...)
+	default:
+		{
+		}
 	}
 }
 
-func spread(kvs ...DefaultPair) []interface{} {
-	s := make([]interface{}, 0, len(kvs))
-	for _, v := range kvs {
-		s = append(s, v.key, v.value)
-	}
-	return s
+func hasValuers(l *logger) bool {
+	return l.prefixes != nil && len(l.prefixes) > 0
 }
 
 // Debug 打印debug级别信息
-func Debug(message string, kvs ...DefaultPair) {
-	if !_logger.EnabledLevel(zapcore.DebugLevel) {
-		return
-	}
-	args := spread(kvs...)
-	_logger.sugar.Debugw(message, args...)
+func (l *logger) Debug(message string, kvs ...any) {
+	l.log(zapcore.DebugLevel, message, kvs)
 }
 
 // Info 打印info级别信息
-func Info(message string, kvs ...DefaultPair) {
-	if !_logger.EnabledLevel(zapcore.InfoLevel) {
-		return
-	}
-	args := spread(kvs...)
-	_logger.sugar.Infow(message, args...)
+func (l *logger) Info(message string, kvs ...any) {
+	l.log(zapcore.InfoLevel, message, kvs)
 }
 
 // Warn 打印warn级别信息
-func Warn(message string, kvs ...DefaultPair) {
-	if !_logger.EnabledLevel(zapcore.WarnLevel) {
-		return
-	}
-	args := spread(kvs...)
-	_logger.sugar.Warnw(message, args...)
+func (l *logger) Warn(message string, kvs ...any) {
+	l.log(zapcore.WarnLevel, message, kvs)
 }
 
 // Error 打印error级别信息
-func Error(message string, kvs ...DefaultPair) {
-	if !_logger.EnabledLevel(zapcore.ErrorLevel) {
-		return
-	}
-	args := spread(kvs...)
-	_logger.sugar.Errorw(message, args...)
+func (l *logger) Error(message string, kvs ...any) {
+	l.log(zapcore.ErrorLevel, message, kvs)
 }
 
-// Fatal 打印错误信息，然后退出
-func Fatal(message string, kvs ...DefaultPair) {
-	if !_logger.EnabledLevel(zapcore.FatalLevel) {
-		return
-	}
-	args := spread(kvs...)
-	_logger.sugar.Fatalw(message, args...)
+func (l *logger) Fatal(message string, kvs ...any) {
+	l.log(zapcore.FatalLevel, message, kvs)
 }
 
-// tempLogger 临时的logger，作为链式调用中间变量
-type tempLogger struct {
-	extra []DefaultPair
+// 下面是一些包级别方法，使用默认的_logger。直接使用包名也能用，比如log.Debug()
+// 但是当我们使用log.WithCtx(ctx)以后，就不能使用包方法了，所以logger本身也实现了对应级别的日志打印
+
+// Debug 打印debug级别信息
+func Debug(message string, kvs ...any) {
+	_logger.log(zapcore.DebugLevel, message, kvs)
 }
 
-// getPrefix 根据extra生成日志前缀，比如 "requestId:%s name:%s "
-func (tl *tempLogger) getPrefix(template string, args []interface{}) ([]interface{}, string) {
-
-	if len(tl.extra) > 0 {
-		var prefix string
-		tmp := make([]interface{}, 0, len(args)+len(tl.extra))
-		for _, pair := range tl.extra {
-			prefix += pair.key + ":%s,"
-			tmp = append(tmp, pair.value)
-		}
-		args = append(tmp, args...)
-		template = prefix + template
-	}
-	return args, template
-}
-
-func (tl *tempLogger) getArgs(kvs []DefaultPair) []interface{} {
-	var args []interface{}
-	if len(tl.extra) > 0 {
-		tl.extra = append(tl.extra, kvs...)
-		args = spread(tl.extra...)
-	} else {
-		args = spread(kvs...)
-	}
-	return args
-}
-
-// RID 实现rid(RequestID打印) 使用格式 log.RID(ctx).Debug(), 可以继续拓展 比如Log.RID(ctx).AppName(ctx).Debug()
-func RID(ctx context.Context) *tempLogger {
-	tl := &tempLogger{extra: make([]DefaultPair, 0)}
-	if ctx == nil {
-		return tl
-	}
-	if v := ctx.Value(constant.RequestId); v != nil && v != "" {
-		tl.extra = append(tl.extra, Pair(constant.RequestId, v))
-	}
-	return tl
-}
-
-func (tl *tempLogger) Debug(message string, kvs ...DefaultPair) {
-	// 这里重复写的原因是zap的log设置的SKIP是1，
-	//并且使用的全局只有一个logger，不能修改SKIP，否则打印的位置不正确，后续都是重复代码
-	// Debug(message, tl.extra...) 这种写法要修改SKIP
-	if !_logger.EnabledLevel(zapcore.DebugLevel) {
-		return
-	}
-	args := tl.getArgs(kvs)
-	_logger.sugar.Debugw(message, args...)
-}
-
-func (tl *tempLogger) Info(message string, kvs ...DefaultPair) {
-	if !_logger.EnabledLevel(zapcore.InfoLevel) {
-		return
-	}
-	args := tl.getArgs(kvs)
-	_logger.sugar.Infow(message, args...)
+// Info 打印info级别信息
+func Info(message string, kvs ...any) {
+	_logger.log(zapcore.InfoLevel, message, kvs)
 }
 
 // Warn 打印warn级别信息
-func (tl *tempLogger) Warn(message string, kvs ...DefaultPair) {
-	if !_logger.EnabledLevel(zapcore.WarnLevel) {
-		return
-	}
-	args := tl.getArgs(kvs)
-	_logger.sugar.Warnw(message, args...)
+func Warn(message string, kvs ...any) {
+	_logger.log(zapcore.WarnLevel, message, kvs)
 }
 
 // Error 打印error级别信息
-func (tl *tempLogger) Error(message string, kvs ...DefaultPair) {
-	if !_logger.EnabledLevel(zapcore.ErrorLevel) {
-		return
-	}
-	args := tl.getArgs(kvs)
-	_logger.sugar.Errorw(message, args...)
+func Error(message string, kvs ...any) {
+	_logger.log(zapcore.ErrorLevel, message, kvs)
 }
 
-// Fatal 打印错误信息，然后退出
-func (tl *tempLogger) Fatal(message string, kvs ...DefaultPair) {
-	if !_logger.EnabledLevel(zapcore.FatalLevel) {
-		return
-	}
-	args := tl.getArgs(kvs)
-	_logger.sugar.Fatalw(message, args...)
+func Fatal(message string, kvs ...any) {
+	_logger.log(zapcore.FatalLevel, message, kvs)
 }
 
 // Sync 关闭时需要同步日志到输出
