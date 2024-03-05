@@ -7,6 +7,7 @@ import (
 	"apiserver-gin/pkg/constant"
 	"context"
 	"os"
+	"reflect"
 	"sync"
 	"time"
 
@@ -39,6 +40,11 @@ type Option struct {
 func WithOption(key string, val any) Option {
 	valuer, ok := val.(Valuer)
 	if !ok {
+		isFunc := reflect.TypeOf(val).Kind() == reflect.Func
+		if isFunc {
+			// 如果不是Valuer类型，但是是函数类型，就panic. 否则无法获得具体入参会报错
+			panic("value can only be set as Valuer type or a literal value of a regular type")
+		}
 		valuer = Valuer(func(ctx context.Context) any {
 			return val
 		})
@@ -223,5 +229,7 @@ func Fatal(message string, kvs ...any) {
 
 // Sync 关闭时需要同步日志到输出
 func Sync() {
-	_ = _logger.sugar.Sync()
+	if _logger != nil {
+		_ = _logger.sugar.Sync()
+	}
 }
