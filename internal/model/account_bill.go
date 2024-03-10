@@ -48,7 +48,7 @@ func (m AccountBill) ToAccountBillResp() AccountBillResp {
 type AddAccountBillReq struct {
 	BillDate       jtime.JsonTime `json:"bill_date" validate:"required" label:"账单日期"`             // 账单日期
 	OriginIncident string         `json:"origin_incident" validate:"required,max=512" label:"事由"` // 账户产生的事由
-	Amount         string         `json:"amount" validate:"required" label:"账单金额"`                // 账单金额（数据库单位分，接收前端值用string避免丢失精度）
+	Amount         string         `json:"amount" validate:"required,numeric" label:"账单金额"`        // 账单金额（数据库单位分，接收前端值用string避免丢失精度）
 	Relation       string         `json:"relation" validate:"required,max=32" label:"关系"`         // 与对方关系,如亲戚|同事|闺蜜
 	ToName         string         `json:"to_name" validate:"max=32"`                              // 对方姓名
 	IsFollow       uint           `json:"is_follow" validate:"oneof=0 1" label:"关注状态"`            // 是否关注或者跟进，0不关注、1关注

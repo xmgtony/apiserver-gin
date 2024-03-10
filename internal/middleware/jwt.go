@@ -20,7 +20,7 @@ import (
 // 请求头的形式为 Authorization: Bearer token
 const authorizationHeader = "Authorization"
 
-//AuthToken 鉴权，验证用户token是否有效
+// AuthToken 鉴权，验证用户token是否有效
 func AuthToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token, err := getJwtFromHeader(c)
@@ -51,4 +51,9 @@ func getJwtFromHeader(c *gin.Context) (string, error) {
 		return "", fmt.Errorf("token 不符合规则")
 	}
 	return strs[1], nil
+}
+
+// GetUserId 从context中获取用户userId
+func GetUserId(c *gin.Context) int64 {
+	return c.GetInt64(constant.UserID)
 }
