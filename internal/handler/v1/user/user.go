@@ -6,8 +6,8 @@
 package user
 
 import (
+	"apiserver-gin/internal/middleware"
 	"apiserver-gin/internal/service"
-	"apiserver-gin/pkg/constant"
 	"apiserver-gin/pkg/errors"
 	"apiserver-gin/pkg/errors/ecode"
 	"apiserver-gin/pkg/response"
@@ -29,7 +29,7 @@ func NewUserHandler(_userSrv service.UserService) *Handler {
 
 func (uh *Handler) GetUserInfo() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		uid := c.GetInt64(constant.UserID)
+		uid := middleware.GetUserId(c)
 		user, err := uh.userSrv.GetById(context.TODO(), uid)
 		if err != nil {
 			response.JSON(c, errors.Wrap(err, ecode.NotFoundErr, "用户信息为空"), nil)

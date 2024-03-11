@@ -47,7 +47,11 @@ func (b *bizErrWithCode) Is(err error) bool {
 
 func Wrap(err error, code int, msg string) error {
 	if err == nil {
-		return nil
+		return &bizErrWithCode{
+			code:  code,
+			msg:   msg,
+			cause: nil,
+		}
 	}
 	if e, ok := err.(*bizErrWithCode); ok {
 		return &bizErrWithCode{
@@ -65,7 +69,11 @@ func Wrap(err error, code int, msg string) error {
 
 func Wrapf(err error, code int, msg string, args ...interface{}) error {
 	if err == nil {
-		return nil
+		return &bizErrWithCode{
+			code:  code,
+			msg:   fmt.Sprintf(msg, args...),
+			cause: nil,
+		}
 	}
 	if e, ok := err.(*bizErrWithCode); ok {
 		return &bizErrWithCode{
@@ -88,23 +96,6 @@ func WithCode(code int, msg string) *bizErrWithCode {
 	}
 }
 
-// DecodeErr 用来解err，将err还原为 code和message
-//func DecodeErr(err error) (int, string) {
-//	if err == nil {
-//		return SUCCESS.ErrCode, SUCCESS.Message
-//	}
-//	switch errType := err.(type) {
-//	case *BizErr:
-//		if errType.Err != nil {
-//			errType.Append(errType.Err.Error())
-//		}
-//		return errType.ErrCode, errType.Message
-//	case *Code:
-//		return errType.ErrCode, errType.Message
-//	default:
-//		return SystemErr.ErrCode, SystemErr.Message
-//	}
-//}
 // DecodeErr 用来解err，将err还原为 code和message
 func DecodeErr(err error) (int, string) {
 	if err == nil {
