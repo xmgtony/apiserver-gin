@@ -48,5 +48,5 @@ func TestTempLogger_Debug(t *testing.T) {
 	c := context.WithValue(context.TODO(), constant.RequestId, uuid.GenUUID16())
 	WithCtx(c).Debug("test log Request ID", "age", 20, "name", "小明")
 	// 在包外使用时, 可以把web框架比如*gin.Context实例直接传入
-	// log.WithCtx(c).Debug("test log Request ID", Pair("age", 20), Pair("name", "小明"))
+	// log.WithCtx(c).Debug("test log Request ID", "age", 20, "name", "小明")
 }

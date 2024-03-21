@@ -7,7 +7,6 @@ import (
 	"apiserver-gin/pkg/constant"
 	"context"
 	"os"
-	"reflect"
 	"sync"
 	"time"
 
@@ -40,10 +39,9 @@ type Option struct {
 func WithOption(key string, val any) Option {
 	valuer, ok := val.(Valuer)
 	if !ok {
-		isFunc := reflect.TypeOf(val).Kind() == reflect.Func
-		if isFunc {
-			// 如果不是Valuer类型，但是是函数类型，就panic. 否则无法获得具体入参会报错
-			panic("value can only be set as Valuer type or a literal value of a regular type")
+		if _, ok := val.(string); !ok {
+			// val只能为Valuer类型或者字符串字面量值
+			panic("val can only be set to Valuer type or a string literal value")
 		}
 		valuer = Valuer(func(ctx context.Context) any {
 			return val
