@@ -206,4 +206,7 @@ curl -H "Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkI
 
 **建议做以上接口测试使用postman等可视化工具，书写文档传图不变，才使用curl演示**
 
+#### 本地开发请安装Google wire依赖管理工具
+[Google wire](https://github.com/google/wire)
+
 #### 后续会推出相关教程，介绍设计理念，以及在实际企业中的开发规范。

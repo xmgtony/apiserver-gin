@@ -14,26 +14,8 @@
 
 按照依赖注入，面向对象编程思想，开闭原则，可拓展，可测性等原则来规划项目。
 
-### 更新日志
+### [详细使用文档-点这里](https://github.com/xmgtony/apiserver-gin/blob/master/docs/quick_start.md)
 
-*2024-03-02：日志重构，大量提高了性能，并且可以全局透传一些值，比如traceId。只需要使用log.WithCtx(ctx)即可, eg：internal/middleware/req_logger.go*
-
-*2023-06-29：增加事务支持，多个service方法可以放在一个事务里执行，使用方式参考 internal/service/tx_demo.go 文件。*
-
-*2023-03-04：调整依赖注入wire.go实现，wire解决复杂依赖较为困难，每次对代码有破坏性更改，改为使用传参解决。*
-
-*2022-05-27：添加新的演示功能，用户记账，用于演示脚手架多个router，handler，service的使用，详情见使用文档，升级viper版本，解决依赖安全问题。*
-
-*2022-04-01：拆分中间件和路由，不放在一起，便于团队开发时多人维护，比如用户模块的开发人员维护user_router.go，商品模块人员维护goods_router.go互相不影响，便于拓展，详情参考cmd/wire.go*
-
-*2022-03-29：校验器validator支持中文，支持自定义标签，替换了gin默认validator实现，不用每次校验错误后，再翻译成中文，根据配置直接返回中文提示信息，api接口不用处理error翻译。  
-具体实现查看pkg/validator包，接口演示查看登录接口。[详细使用文档-点这里](https://github.com/xmgtony/apiserver-gin/blob/master/docs/quick_start.md)*
-
-*2022-03-15：实现日志requestId等透传，使用示例 pkg/log/log_test.go*
-
-*2022-03-11：wire依赖注入工具引入，升级jwt组件。*
-
-*2022-02-22：按照清洁架构及实际项目使用经验重新规划项目结构。*
 
 ### 目前整合组件及实现功能
 
@@ -64,8 +46,6 @@
 - 添加makefile，可以使用make 命令进行编译，打包。
 - 完善了项目版本管理，使用make命令编译后的项目可以方便跟踪线上发布版本
 - 其他一些坑，后续会出一系列配置与使用教程。
-
-#### [使用文档-点这里](https://github.com/xmgtony/apiserver-gin/blob/master/docs/quick_start.md)
 
 ### 特别感谢JetBrains对开源项目支持
 <a href="https://jb.gg/OpenSourceSupport">
