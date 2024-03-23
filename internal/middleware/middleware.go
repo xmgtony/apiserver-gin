@@ -30,7 +30,7 @@ func (m *middleware) Load(g *gin.Engine) {
 	g.Use(Options())
 	g.Use(Secure())
 	g.Use(trace.SetRequestId())
-	g.Use(ReqLogger)
+	g.Use(ReqLogger())
 	// 404
 	g.NoRoute(func(c *gin.Context) {
 		response.JSON(c, errors.WithCode(ecode.NotFoundErr, "404 not found!"), nil)
