@@ -6,6 +6,39 @@
 
 布局参考[project-layout](https://github.com/golang-standards/project-layout)，该项目非Go官方标准，但是已经是行业主流。
 
+### 环境配置
+1. 安装go sdk, 建议使用go1.21版本以上，[Go官网下载地址](https://go.dev/dl/)
+2. 安装好go sdk以后，需要安装Google wire，依赖注入工具。用于生成依赖注入代码
+    ```shell
+    $ go install github.com/google/wire/cmd/wire@latest
+    ```
+3. 设置go的模块代理为国内镜像地址，避免拉取依赖失败
+    ```shell
+    $ go env -w GO111MODULE=on
+    $ go env -w GOPROXY=https://goproxy.cn,direct
+    ```
+
+### 运行项目
+1. 克隆项目后首先拉取依赖
+    ```shell
+    $ go mod tidy
+    ```
+2. 命令行运行
+    ```shell
+    # 直接运行
+    # eg. 在cmd目录下执行（也可以在其他目录执行，注意配置文件路径，默认寻找当前执行路径下conf目录中的config.yml文件）
+    >$ go run . -c ../conf/config.yml
+    
+    # 使用make
+    # 1、打包（Linux/MacOS 下），在项目目录下执行make命令，打好的包在target目录下
+    >$ make 
+    # 2、删除已打的包
+    >$ make clean
+    ```
+   开发工具goland和vscode中运行请自行查找资料，非常简单，不要忘了指定配置文件目录不然找不到配置文件。
+
+### [详细使用文档-点这里](https://github.com/xmgtony/apiserver-gin/blob/master/docs/quick_start.md)
+
 ### 理论基础
 
 #### 清洁架构 [(Robert C. Martin)](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
@@ -14,24 +47,9 @@
 
 按照依赖注入，面向对象编程思想，开闭原则，可拓展，可测性等原则来规划项目。
 
-### [详细使用文档-点这里](https://github.com/xmgtony/apiserver-gin/blob/master/docs/quick_start.md)
-
-
 ### 目前整合组件及实现功能
 
 - 加入viper使用yml配置文件来配置项目信息，启动时指定不同的配置文件
-
-```shell
-# 直接运行
-# eg. 在cmd目录下执行（也可以在其他目录执行，注意配置文件路径，默认寻找当前执行路径下conf目录中的config.yml文件）
->$ go run . -c ../conf/config.yml
-
-# 使用make
-# 1、打包（Linux/MacOS 下），在项目目录下执行make命令，打好的包在target目录下
->$ make 
-# 2、删除已打的包
->$ make clean
-```
 - 优雅停机实现，停机时清理资源。
 - 集成gorm 并自定义JsonTime 解决Json序列化和反序列化只支持UTC时间的问题（可以自定义时间格式）  
   提供了部分demo，可以按照demo在项目中直接使用。
@@ -45,7 +63,7 @@
 - 应用统一入口日志记录中间件实现，日志log_id透传。
 - 添加makefile，可以使用make 命令进行编译，打包。
 - 完善了项目版本管理，使用make命令编译后的项目可以方便跟踪线上发布版本
-- 其他一些坑，后续会出一系列配置与使用教程。
+- 更多功能会根据个人实际开发中的经验添加，不过度封装，保持简单。
 
 ### 特别感谢JetBrains对开源项目支持
 <a href="https://jb.gg/OpenSourceSupport">
