@@ -8,9 +8,9 @@ package user
 import (
 	"apiserver-gin/internal/middleware"
 	"apiserver-gin/internal/service"
-	"apiserver-gin/pkg/errors"
-	"apiserver-gin/pkg/errors/ecode"
 	"apiserver-gin/pkg/response"
+	"apiserver-gin/pkg/xerrors"
+	"apiserver-gin/pkg/xerrors/ecode"
 	"context"
 
 	"github.com/gin-gonic/gin"
@@ -32,7 +32,7 @@ func (uh *Handler) GetUserInfo() gin.HandlerFunc {
 		uid := middleware.GetUserId(c)
 		user, err := uh.userSrv.GetById(context.TODO(), uid)
 		if err != nil {
-			response.JSON(c, errors.Wrap(err, ecode.NotFoundErr, "用户信息为空"), nil)
+			response.JSON(c, xerrors.Wrap(err, ecode.NotFoundErr, "用户信息为空"), nil)
 		} else {
 			response.JSON(c, nil, user)
 		}

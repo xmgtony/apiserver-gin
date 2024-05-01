@@ -1,13 +1,13 @@
-package errors
+package xerrors
 
 import (
-	"apiserver-gin/pkg/errors/ecode"
+	"apiserver-gin/pkg/xerrors/ecode"
 	"errors"
 	"fmt"
 	"strconv"
 )
 
-// bizErrWithCode 自定义业务错误。拓展自https://github.com/pkg/errors
+// bizErrWithCode 自定义业务错误。拓展自https://github.com/pkg/xerrors
 type bizErrWithCode struct {
 	code  int
 	msg   string
@@ -39,7 +39,8 @@ func (b *bizErrWithCode) GetMsg() string {
 }
 
 func (b *bizErrWithCode) Is(err error) bool {
-	if e, ok := err.(*bizErrWithCode); ok && e.code == b.code {
+	var e *bizErrWithCode
+	if errors.As(err, &e) && e.code == b.code {
 		return true
 	}
 	return false
@@ -53,7 +54,8 @@ func Wrap(err error, code int, msg string) error {
 			cause: nil,
 		}
 	}
-	if e, ok := err.(*bizErrWithCode); ok {
+	var e *bizErrWithCode
+	if errors.As(err, &e) {
 		return &bizErrWithCode{
 			code:  e.code,
 			msg:   msg,
@@ -75,7 +77,8 @@ func Wrapf(err error, code int, msg string, args ...interface{}) error {
 			cause: nil,
 		}
 	}
-	if e, ok := err.(*bizErrWithCode); ok {
+	var e *bizErrWithCode
+	if errors.As(err, &e) {
 		return &bizErrWithCode{
 			code:  e.code,
 			msg:   fmt.Sprintf(msg, args...),

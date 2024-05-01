@@ -89,7 +89,7 @@ func (l *logger) newCore(ws zapcore.WriteSyncer) zapcore.Core {
 	encoder := zapcore.EncoderConfig{
 		MessageKey:     "msg",
 		LevelKey:       "level",
-		TimeKey:        "time",
+		TimeKey:        "xtime",
 		NameKey:        "logger",
 		CallerKey:      "caller",
 		StacktraceKey:  "stack",

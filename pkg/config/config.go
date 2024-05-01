@@ -50,12 +50,12 @@ type RedisConfig struct {
 type LogConfig struct {
 	Level      string `mapstructure:"level"`
 	FileName   string `mapstructure:"file-name"`
-	TimeFormat string `mapstructure:"time-format"`
+	TimeFormat string `mapstructure:"xtime-format"`
 	MaxSize    int    `mapstructure:"max-size"`
 	MaxBackups int    `mapstructure:"max-backups"`
 	MaxAge     int    `mapstructure:"max-age"`
 	Compress   bool   `mapstructure:"compress"`
-	LocalTime  bool   `mapstructure:"local-time"`
+	LocalTime  bool   `mapstructure:"local-xtime"`
 	Console    bool   `mapstructure:"console"`
 }
 

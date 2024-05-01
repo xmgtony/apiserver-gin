@@ -2,10 +2,10 @@
 // date: 2021-06-30 16:06
 // version:
 
-package errors
+package xerrors
 
 import (
-	code2 "apiserver-gin/pkg/errors/ecode"
+	code2 "apiserver-gin/pkg/xerrors/ecode"
 	"errors"
 	"testing"
 )

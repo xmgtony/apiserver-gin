@@ -11,7 +11,7 @@ database:
   host: 127.0.0.1 #数据库服务地址
   port: 3306 #数据库端口
   username: root #用户名(实际线上不可使用root,请授权一个账户)
-  password: 123456 #密码
+  password: kudl2023*@ #密码
   maximum-pool-size: 50  #连接池最大连接数
   maximum-idle-size: 10  #连接池最大空闲数
 # 缓存redis配置
