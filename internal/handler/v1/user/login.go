@@ -10,9 +10,9 @@ import (
 	"apiserver-gin/pkg/config"
 	"apiserver-gin/pkg/jwt"
 	"apiserver-gin/pkg/response"
-	jtime "apiserver-gin/pkg/time"
 	"apiserver-gin/pkg/xerrors"
 	"apiserver-gin/pkg/xerrors/ecode"
+	jtime "apiserver-gin/pkg/xtime"
 	"apiserver-gin/tools/security"
 	"context"
 	"time"
@@ -47,11 +47,11 @@ func (uh *Handler) Login() gin.HandlerFunc {
 			return
 		}
 		response.JSON(c, nil, struct {
-			Token    string         `json:"token"`
-			ExpireAt jtime.JsonTime `json:"expire_at"`
+			Token    string     `json:"token"`
+			ExpireAt jtime.Time `json:"expire_at"`
 		}{
 			Token:    token,
-			ExpireAt: jtime.JsonTime(expireAt),
+			ExpireAt: jtime.Time(expireAt),
 		})
 	}
 }

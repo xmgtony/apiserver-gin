@@ -1,7 +1,7 @@
 package model
 
 import (
-	"apiserver-gin/pkg/time"
+	"apiserver-gin/pkg/xtime"
 )
 
 // BaseModel 用于表示model公共的部分（对应数据库公共的字段）
@@ -11,8 +11,8 @@ import (
 // 其中modified 设置为 ON UPDATE CURRENT_TIMESTAMP ，以上仅供参考
 // gorm.Model 也提供了类似BaseModel功能，并且根据此model字段做了一些自动逻辑。
 type BaseModel struct {
-	Id            int64          `gorm:"column:id;primary_key;AUTO_INCREMENT" json:"id"`
-	EnabledStatus *int8          `gorm:"column:enabled_status;type:tinyint;default:1" json:"-"`
-	Created       time.JsonTime  `gorm:"column:created;type:datetime;default:CURRENT_TIMESTAMP" json:"created"`
-	Modified      *time.JsonTime `gorm:"column:modified;type:timestamp;default:CURRENT_TIMESTAMP" json:"modified"`
+	Id            int64       `gorm:"column:id;primary_key;AUTO_INCREMENT" json:"id"`
+	EnabledStatus *int8       `gorm:"column:enabled_status;type:tinyint;default:1" json:"-"`
+	Created       xtime.Time  `gorm:"column:created;type:datetime;default:CURRENT_TIMESTAMP" json:"created"`
+	Modified      *xtime.Time `gorm:"column:modified;type:timestamp;default:CURRENT_TIMESTAMP" json:"modified"`
 }
