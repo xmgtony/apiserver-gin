@@ -9,9 +9,9 @@ import (
 	"apiserver-gin/internal/middleware"
 	"apiserver-gin/internal/model"
 	"apiserver-gin/internal/service"
-	"apiserver-gin/pkg/errors"
-	"apiserver-gin/pkg/errors/ecode"
 	"apiserver-gin/pkg/response"
+	"apiserver-gin/pkg/xerrors"
+	"apiserver-gin/pkg/xerrors/ecode"
 	"github.com/gin-gonic/gin"
 	"github.com/shopspring/decimal"
 )
@@ -32,17 +32,17 @@ func (abh *Handler) AddAccountBill() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		addAccountBillReq := model.AddAccountBillReq{}
 		if err := c.ShouldBindJSON(&addAccountBillReq); err != nil {
-			response.JSON(c, errors.WithCode(ecode.ValidateErr, err.Error()), nil)
+			response.JSON(c, xerrors.WithCode(ecode.ValidateErr, err.Error()), nil)
 			return
 		}
 		uid := middleware.GetUserId(c)
 		amd, err := decimal.NewFromString(addAccountBillReq.Amount)
 		if err != nil {
-			response.JSON(c, errors.Wrap(err, ecode.ValidateErr, "金额填写错误"), nil)
+			response.JSON(c, xerrors.Wrap(err, ecode.ValidateErr, "金额填写错误"), nil)
 			return
 		}
 		if amd.IsNegative() {
-			response.JSON(c, errors.WithCode(ecode.ValidateErr, "金额须填写大于0的数字"), nil)
+			response.JSON(c, xerrors.WithCode(ecode.ValidateErr, "金额须填写大于0的数字"), nil)
 			return
 		}
 		// 数据库存储的单位为分，所以要*100
@@ -51,7 +51,7 @@ func (abh *Handler) AddAccountBill() gin.HandlerFunc {
 		accountBill := addAccountBillReq.ToAccountBill(uint64(uid), uint(amount))
 		err = abh.accountBillServ.Save(c, &accountBill)
 		if err != nil {
-			response.JSON(c, errors.Wrap(err, ecode.RecordCreateErr, "保存账目清单信息失败"), nil)
+			response.JSON(c, xerrors.Wrap(err, ecode.RecordCreateErr, "保存账目清单信息失败"), nil)
 			return
 		}
 		response.JSON(c, nil, nil)
@@ -64,7 +64,7 @@ func (abh *Handler) GetAccountBillList() gin.HandlerFunc {
 		uid := middleware.GetUserId(c)
 		bills, err := abh.accountBillServ.SelectListByUserId(c, uid)
 		if err != nil {
-			response.JSON(c, errors.Wrap(err, ecode.NotFoundErr, "查询错误，未找到记录"), nil)
+			response.JSON(c, xerrors.Wrap(err, ecode.NotFoundErr, "查询错误，未找到记录"), nil)
 			return
 		}
 		respBills := make([]model.AccountBillResp, 0)

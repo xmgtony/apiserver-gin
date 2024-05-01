@@ -2,8 +2,8 @@ package response
 
 import (
 	"apiserver-gin/pkg/constant"
-	"apiserver-gin/pkg/errors"
-	"apiserver-gin/pkg/errors/ecode"
+	"apiserver-gin/pkg/xerrors"
+	"apiserver-gin/pkg/xerrors/ecode"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -17,9 +17,9 @@ type ApiResponse struct {
 	Data      interface{} `json:"data,omitempty"` // 响应数据，一般从这里前端从这个里面取出数据展示
 }
 
-//JSON 发送json格式的数据
+// JSON 发送json格式的数据
 func JSON(c *gin.Context, err error, data interface{}) {
-	errCode, message := errors.DecodeErr(err)
+	errCode, message := xerrors.DecodeErr(err)
 	// 如果code != 0, 失败的话 返回http状态码400（一般也可以全部返回200）
 	// 返回400 更严谨一些，个人接触的项目中大部分都是400。
 	var httpStatus int
