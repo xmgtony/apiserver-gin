@@ -6,11 +6,11 @@
 package user
 
 import (
+	"apiserver-gin/internal/base/errcode"
+	"apiserver-gin/internal/base/reply"
 	"apiserver-gin/internal/middleware"
 	"apiserver-gin/internal/service"
-	"apiserver-gin/pkg/response"
 	"apiserver-gin/pkg/xerrors"
-	"apiserver-gin/pkg/xerrors/ecode"
 	"context"
 
 	"github.com/gin-gonic/gin"
@@ -32,9 +32,9 @@ func (uh *Handler) GetUserInfo() gin.HandlerFunc {
 		uid := middleware.GetUserId(c)
 		user, err := uh.userSrv.GetById(context.TODO(), uid)
 		if err != nil {
-			response.JSON(c, xerrors.Wrap(err, ecode.NotFoundErr, "用户信息为空"), nil)
+			reply.Fail(c, xerrors.Wrap(err, errcode.NotFoundErr, "用户信息为空"))
 		} else {
-			response.JSON(c, nil, user)
+			reply.Success(c, user)
 		}
 	}
 }

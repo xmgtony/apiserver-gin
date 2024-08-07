@@ -72,3 +72,47 @@ func TestTimeUnmarshalJSON(t *testing.T) {
 		})
 	}
 }
+
+func TestTime_Scan(t *testing.T) {
+	tests := []struct {
+		name    string
+		time    Time
+		value   interface{}
+		wantErr bool
+	}{
+		{
+			name:    "nil value",
+			time:    Time{},
+			value:   nil,
+			wantErr: false,
+		},
+		{
+			name:    "time.Time value",
+			time:    Time{},
+			value:   time.Now(),
+			wantErr: false,
+		},
+		{
+			name:    "string value with correct format",
+			time:    Time{},
+			value:   "2021-01-01 12:00:00",
+			wantErr: false,
+		},
+		{
+			name:    "string value with incorrect format",
+			time:    Time{},
+			value:   "invalid format",
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.time.Scan(tt.value)
+
+			if err != nil && !tt.wantErr {
+				t.Errorf("Time.Scan() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}

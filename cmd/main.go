@@ -25,8 +25,6 @@ func main() {
 	log.InitLogger(&c.LogConfig,
 		log.WithOption("appName", c.AppName),
 		log.WithOption("requestId", trace.RequestId()))
-	// 确保程序退出时日志能同步
-	defer log.Sync()
 
 	// 创建数据库连接
 	ds := mysql.NewDefaultMysql(c.DBConfig)
@@ -36,6 +34,7 @@ func main() {
 	srv.RegisterOnShutdown(func() {
 		if ds != nil {
 			ds.Close()
+			log.Sync()
 		}
 	})
 	// 初始化路由

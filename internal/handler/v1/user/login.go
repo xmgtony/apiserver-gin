@@ -6,12 +6,12 @@
 package user
 
 import (
+	"apiserver-gin/internal/base/errcode"
+	"apiserver-gin/internal/base/reply"
 	"apiserver-gin/internal/model"
 	"apiserver-gin/pkg/config"
 	"apiserver-gin/pkg/jwt"
-	"apiserver-gin/pkg/response"
 	"apiserver-gin/pkg/xerrors"
-	"apiserver-gin/pkg/xerrors/ecode"
 	jtime "apiserver-gin/pkg/xtime"
 	"apiserver-gin/tools/security"
 	"context"
@@ -24,18 +24,18 @@ func (uh *Handler) Login() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		loginReqParam := model.LoginReq{}
 		if err := c.ShouldBind(&loginReqParam); err != nil {
-			response.JSON(c, xerrors.WithCode(ecode.ValidateErr, err.Error()), nil)
+			reply.Fail(c, xerrors.WithCode(errcode.ValidateErr, err.Error()))
 			return
 		}
 		// 查询用户信息
 		user, err := uh.userSrv.GetByMobile(context.TODO(), loginReqParam.Mobile)
 		if err != nil {
-			response.JSON(c, xerrors.Wrap(err, ecode.UserLoginErr, "登录失败，用户不存在"), nil)
+			reply.Fail(c, xerrors.WithCode(errcode.UserLoginErr, "登录失败，用户不存在"))
 			return
 		}
 
 		if !security.ValidatePassword(loginReqParam.Password, user.Password) {
-			response.JSON(c, xerrors.WithCode(ecode.UserLoginErr, "登录失败，用户名、密码不匹配"), nil)
+			reply.Fail(c, xerrors.WithCode(errcode.UserLoginErr, "登录失败，用户名、密码不匹配"))
 			return
 		}
 		// 生成jwt token
@@ -43,10 +43,10 @@ func (uh *Handler) Login() gin.HandlerFunc {
 		claims := jwt.BuildClaims(expireAt, user.Id)
 		token, err := jwt.GenToken(claims, config.GlobalConfig.JwtSecret)
 		if err != nil {
-			response.JSON(c, xerrors.Wrap(err, ecode.UserLoginErr, "生成用户授权token失败"), nil)
+			reply.Fail(c, xerrors.WithCode(errcode.UserLoginErr, "生成用户授权token失败"))
 			return
 		}
-		response.JSON(c, nil, struct {
+		reply.Success(c, struct {
 			Token    string     `json:"token"`
 			ExpireAt jtime.Time `json:"expire_at"`
 		}{

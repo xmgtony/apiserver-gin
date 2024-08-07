@@ -1,7 +1,7 @@
 package trace
 
 import (
-	"apiserver-gin/pkg/constant"
+	"apiserver-gin/internal/base/constant"
 	"apiserver-gin/pkg/log"
 	"apiserver-gin/tools/uuid"
 	"context"
@@ -15,7 +15,7 @@ func SetRequestId() gin.HandlerFunc {
 		c.Header("X-Request-Id", requestId)
 
 		// 设置requestId到context中，便于后面调用链的透传
-		c.Set(constant.RequestId, requestId)
+		c.Set(constant.TraceID, requestId)
 		c.Next()
 	}
 }
@@ -23,7 +23,7 @@ func SetRequestId() gin.HandlerFunc {
 // RequestId 获取requestId
 func RequestId() log.Valuer {
 	return func(c context.Context) any {
-		if rid := c.Value(constant.RequestId); rid != nil {
+		if rid := c.Value(constant.TraceID); rid != nil {
 			return rid.(string)
 		}
 		return ""

@@ -6,12 +6,12 @@
 package middleware
 
 import (
+	"apiserver-gin/internal/base/constant"
+	"apiserver-gin/internal/base/errcode"
+	"apiserver-gin/internal/base/reply"
 	"apiserver-gin/pkg/config"
-	"apiserver-gin/pkg/constant"
 	"apiserver-gin/pkg/jwt"
-	"apiserver-gin/pkg/response"
 	"apiserver-gin/pkg/xerrors"
-	"apiserver-gin/pkg/xerrors/ecode"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"strings"
@@ -25,14 +25,14 @@ func AuthToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token, err := getJwtFromHeader(c)
 		if err != nil {
-			response.JSON(c, xerrors.Wrap(err, ecode.RequireAuthErr, "invalid token"), nil)
+			reply.Fail(c, xerrors.Wrap(err, errcode.RequireAuthErr, "invalid token"))
 			c.Abort()
 			return
 		}
 		// 验证token是否正确
 		claims, err := jwt.ParseToken(token, config.GlobalConfig.JwtSecret)
 		if err != nil {
-			response.JSON(c, xerrors.Wrap(err, ecode.RequireAuthErr, "invalid token"), nil)
+			reply.Fail(c, xerrors.Wrap(err, errcode.RequireAuthErr, "invalid token"))
 			c.Abort()
 			return
 		}
