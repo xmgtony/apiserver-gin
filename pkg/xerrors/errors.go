@@ -1,7 +1,7 @@
 package xerrors
 
 import (
-	"apiserver-gin/pkg/xerrors/ecode"
+	"apiserver-gin/internal/base/errcode"
 	"errors"
 	"fmt"
 	"strconv"
@@ -102,11 +102,11 @@ func WithCode(code int, msg string) *bizErrWithCode {
 // DecodeErr 用来解err，将err还原为 code和message
 func DecodeErr(err error) (int, string) {
 	if err == nil {
-		return ecode.Success, "success"
+		return errcode.Success, "success"
 	}
 	var b *bizErrWithCode
 	if errors.As(err, &b) {
 		return b.code, b.GetMsg()
 	}
-	return ecode.Unknown, err.Error()
+	return errcode.Unknown, err.Error()
 }

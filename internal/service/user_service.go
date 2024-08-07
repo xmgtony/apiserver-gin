@@ -6,10 +6,10 @@
 package service
 
 import (
+	"apiserver-gin/internal/base/errcode"
 	"apiserver-gin/internal/model"
 	"apiserver-gin/internal/repo"
 	"apiserver-gin/pkg/xerrors"
-	"apiserver-gin/pkg/xerrors/ecode"
 	"context"
 )
 
@@ -37,7 +37,7 @@ func NewUserService(_ur repo.UserRepo) *userService {
 // GetByName 通过用户名 查找用户
 func (us *userService) GetByName(ctx context.Context, name string) (*model.User, error) {
 	if len(name) == 0 {
-		return nil, xerrors.WithCode(ecode.ValidateErr, "用户名称不能为空")
+		return nil, xerrors.WithCode(errcode.ValidateErr, "用户名称不能为空")
 	}
 	return us.ur.GetUserByName(ctx, name)
 }

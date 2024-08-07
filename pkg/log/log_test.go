@@ -5,8 +5,9 @@
 package log
 
 import (
+	"apiserver-gin/internal/base/constant"
 	"apiserver-gin/pkg/config"
-	"apiserver-gin/pkg/constant"
+	"apiserver-gin/pkg/xtime"
 	"apiserver-gin/tools/uuid"
 	"context"
 	"testing"
@@ -18,7 +19,7 @@ func init() {
 		LogConfig: config.LogConfig{
 			Level:      "debug",
 			FileName:   "test.log",
-			TimeFormat: constant.TimeLayout,
+			TimeFormat: xtime.DateTime,
 			MaxSize:    1,
 			MaxBackups: 5,
 			MaxAge:     2,
@@ -30,7 +31,7 @@ func init() {
 	}
 	InitLogger(&(c.LogConfig),
 		WithOption("requestId", Valuer(func(ctx context.Context) any {
-			return ctx.Value(constant.RequestId)
+			return ctx.Value(constant.TraceID)
 		})))
 }
 
@@ -45,7 +46,7 @@ func BenchmarkInfo(b *testing.B) {
 }
 
 func TestTempLogger_Debug(t *testing.T) {
-	c := context.WithValue(context.TODO(), constant.RequestId, uuid.GenUUID16())
+	c := context.WithValue(context.TODO(), constant.TraceID, uuid.GenUUID16())
 	WithCtx(c).Debug("test log Request ID", "age", 20, "name", "小明")
 	// 在包外使用时, 可以把web框架比如*gin.Context实例直接传入
 	// log.WithCtx(c).Debug("test log Request ID", "age", 20, "name", "小明")

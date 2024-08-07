@@ -4,7 +4,7 @@ package log
 
 import (
 	"apiserver-gin/pkg/config"
-	"apiserver-gin/pkg/constant"
+	"apiserver-gin/pkg/xtime"
 	"context"
 	"os"
 	"sync"
@@ -122,7 +122,7 @@ func (l *logger) newCore(ws zapcore.WriteSyncer) zapcore.Core {
 func (l *logger) customTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	format := l.cfg.TimeFormat
 	if len(format) <= 0 {
-		format = constant.TimeLayoutMs
+		format = xtime.DateTimeMs
 	}
 	enc.AppendString(t.Format(format))
 }

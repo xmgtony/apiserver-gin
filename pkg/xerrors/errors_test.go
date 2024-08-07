@@ -5,7 +5,7 @@
 package xerrors
 
 import (
-	code2 "apiserver-gin/pkg/xerrors/ecode"
+	code2 "apiserver-gin/internal/base/errcode"
 	"errors"
 	"testing"
 )
